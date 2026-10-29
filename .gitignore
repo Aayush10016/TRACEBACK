@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+.tools/
+backend/data/
+backend/target/
+frontend/node_modules/
+frontend/dist/
+*.log
+*.tsbuildinfo
+.idea/
+.vscode/

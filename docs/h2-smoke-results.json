@@ -1,0 +1,30 @@
+[
+  {
+    "verification": "PASSED",
+    "orders": 1,
+    "runId": "4fcacc82-c0c6-4b27-8210-f3e47252a258",
+    "scenario": "NORMAL_ORDER",
+    "events": 5
+  },
+  {
+    "verification": "PASSED",
+    "orders": 2,
+    "runId": "caebc21b-c338-4dc5-bce5-2f1ec8bfc5fd",
+    "scenario": "DUPLICATE_ORDER",
+    "events": 9
+  },
+  {
+    "verification": "PASSED",
+    "orders": 0,
+    "runId": "350ec9e2-d29c-4274-88e5-eaa5c630fce0",
+    "scenario": "PAYMENT_FAILURE",
+    "events": 4
+  },
+  {
+    "verification": "PASSED",
+    "orders": 1,
+    "runId": "04c792bc-0a8e-4b53-a8a0-a71687ddf8e9",
+    "scenario": "TIMEOUT_WITH_IDEMPOTENCY",
+    "events": 8
+  }
+]
