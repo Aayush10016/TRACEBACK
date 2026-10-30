@@ -6,25 +6,18 @@ import static org.springframework.http.HttpStatus.*;
 import com.fasterxml.jackson.databind.*;
 import java.time.Instant;
 import java.util.*;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class InvestigationService {
   private final RunService runs;
-  private final InvestigationProvider provider;
+  private final AiProviderRouter provider;
   private final ObjectMapper json;
-  private final String model;
 
-  public InvestigationService(
-      RunService r,
-      InvestigationProvider p,
-      ObjectMapper j,
-      @Value("${traceback.meta.model}") String m) {
+  public InvestigationService(RunService r, AiProviderRouter p, ObjectMapper j) {
     runs = r;
     provider = p;
     json = j;
-    model = m;
   }
 
   public synchronized Investigation investigate(UUID id) {
@@ -40,7 +33,13 @@ public class InvestigationService {
     Analysis analysis = validate(provider.complete(prompt), run);
     var result =
         new Investigation(
-            UUID.randomUUID(), id, Instant.now(), "COMPLETED", "meta", model, analysis);
+            UUID.randomUUID(),
+            id,
+            Instant.now(),
+            "COMPLETED",
+            provider.name(),
+            provider.model(),
+            analysis);
     runs.saveArtifact(id, "INVESTIGATION", result.id(), result);
     return result;
   }
@@ -79,7 +78,8 @@ public class InvestigationService {
         throw new ApiException(
             BAD_GATEWAY,
             "INVALID_EVIDENCE",
-            "Meta referenced evidence outside this run. Analysis was rejected and was not saved.");
+            "The AI provider referenced evidence outside this run. Analysis was rejected and was"
+                + " not saved.");
       return a;
     } catch (ApiException e) {
       throw e;
@@ -87,7 +87,7 @@ public class InvestigationService {
       throw new ApiException(
           BAD_GATEWAY,
           "MALFORMED_ANALYSIS",
-          "Meta returned invalid analysis. It was rejected and was not saved.");
+          "The AI provider returned invalid analysis. It was rejected and was not saved.");
     }
   }
 }

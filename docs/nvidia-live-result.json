@@ -1,0 +1,28 @@
+{
+  "generationRequestsAttempted": 3,
+  "readTimeoutSeconds": 90,
+  "earlierAttempts": [
+    {
+      "result": "HTTP 410 Gone",
+      "model": "meta/llama-3.3-70b-instruct"
+    },
+    {
+      "result": "30-second read timeout",
+      "model": "meta/muse-glimmer-30b"
+    }
+  ],
+  "verificationStatus": "PASSED",
+  "provider": "nvidia",
+  "timestamp": "2026-10-30T20:07:27.302983+05:30",
+  "evidenceCount": 5,
+  "ordersAfter": 1,
+  "model": "meta/muse-glimmer-30b",
+  "allEvidenceBelongsToRun": true,
+  "rootCauseHypothesis": "Order service committed the first attempt successfully but the client never received the success response due to a response timeout, and the subsequent client retry was processed as a new creation because idempotency on logicalOrderId/idempotencyKey was not enforced, resulting in a second order with the same identifiers.",
+  "runId": "fd13d542-96e3-4527-b564-696d91496078",
+  "ordersBefore": 2,
+  "duplicatesAfter": 0,
+  "investigationId": "d70f7c20-bb0f-4595-9ba4-579f1e9c1232",
+  "success": true,
+  "evidenceLinkUiVerified": true
+}

@@ -95,3 +95,22 @@ An isolated PostgreSQL 17 QA cluster was used on port 55433 during verification;
 - No data: create a simulation. Metrics are computed from the database; no fixtures are seeded into production storage.
 
 See [REPORT.md](REPORT.md), [architecture](docs/ARCHITECTURE.md), [API](docs/API.md), [testing](docs/TESTING.md), [design system](docs/DESIGN_SYSTEM.md), and [remaining work](docs/REMAINING_WORK.md). The complete uploaded specification is preserved as `MASTER_SPECIFICATION.md`.
+
+## NVIDIA-hosted Meta model (added 2026-10-30)
+
+For an NVIDIA API Catalog key, edit the ignored `D:\TRACEBACK\.env`:
+
+```dotenv
+AI_PROVIDER=nvidia
+NVIDIA_API_KEY=your_authorized_nvidia_key
+NVIDIA_MODEL=meta/muse-glimmer-30b
+```
+
+Restart `scripts/start-backend.ps1` after saving. This uses NVIDIA to host a Meta Muse Glimmer model; it is not a direct Meta Model API request. The UI and stored investigation record identify `nvidia` and the actual configured model. A safe provider-neutral status is available at `/api/health` under `ai`; `meta` remains a compatibility alias for older clients.
+
+The implementation follows [NVIDIA's official Muse Glimmer API reference](https://docs.api.nvidia.com/nim/reference/meta-muse-glimmer-30b-infer): fixed `POST https://integrate.api.nvidia.com/v1/chat/completions`, bearer authentication, system/user messages, `max_tokens: 2000`, `temperature: 0.95`, `stream: false`. JSON is requested in the system prompt and validated by Java; undocumented JSON output parameters are not sent to this endpoint. No claim is made that account credits or model access are available until a real request succeeds. Pending HTTP 202 is reported explicitly without polling or automatic retries.
+
+To return to direct Meta, set `AI_PROVIDER=meta` and configure `META_API_KEY`. Keys are separate and never automatically switched. Never put either key into a `VITE_*` variable, frontend source, Git or chat.
+
+
+The live catalog check on 2026-10-30 supersedes the initial Llama 3.3 selection: that older model returned HTTP 410 Gone. The selected model is meta/muse-glimmer-30b, verified against NVIDIA's live /v1/models catalog and its official Muse Glimmer reference. The first Muse request timed out at 30 seconds; the client now allows a bounded 90-second read window (5-second connect), and the frontend allows 100 seconds for investigation POSTs. No automatic model fallback or retry occurs.

@@ -130,7 +130,7 @@ public class Simulator {
         repair,
         repair
             ? "Idempotency protection applied to a separate controlled replay; original trace"
-                  + " preserved."
+                + " preserved."
             : "Scenario invariants checked against the stored run.",
         b,
         a,

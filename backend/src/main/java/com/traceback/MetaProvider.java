@@ -46,9 +46,9 @@ public class MetaProvider implements InvestigationProvider {
             ? "Only the documented Meta HTTPS endpoint is supported."
             : key.isBlank()
                 ? "Set META_API_KEY on the backend to enable analysis. Simulation and verification"
-                      + " remain available."
+                    + " remain available."
                 : "Credentials present. Access is verified only by an explicit investigation"
-                      + " request.");
+                    + " request.");
   }
 
   @Override

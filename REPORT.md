@@ -1,3 +1,22 @@
+# Current update — NVIDIA integration verified, 2026-10-30
+
+This update supersedes the AI-readiness limitations in the historical 2026-10-29 baseline report below.
+
+- Added a separate NVIDIA provider and provider router; direct Meta support is preserved. NVIDIA hosts the selected **Meta Muse Glimmer 30B** model (`meta/muse-glimmer-30b`). The selected host/model are stored with investigations and displayed accurately in the UI. No account/key fallback occurs.
+- The user saved the key in Git-ignored `D:\TRACEBACK\.env` as `NVIDIA_API_KEY`. `AI_PROVIDER=nvidia` and `NVIDIA_MODEL=meta/muse-glimmer-30b` select this integration. The key was never printed, placed in frontend source, sent in command-line arguments or included in this report.
+- Official contract verified at https://docs.api.nvidia.com/nim/reference/meta-muse-glimmer-30b-infer, plus a live NVIDIA `/v1/models` catalog query. Fixed HTTPS chat-completions endpoint, bearer header, system/user messages, max_tokens 2000, temperature 0.95, reasoning_effort none, stream false. Strict JSON/evidence validation remains mandatory. Connect timeout is 5 seconds; NVIDIA read timeout is 90 seconds, with a matching 100-second frontend investigation window. Direct Meta retains its original timeout. No automatic retries occur.
+- **Real authenticated generation succeeded.** Run `fd13d542-96e3-4527-b564-696d91496078`, investigation `d70f7c20-bb0f-4595-9ba4-579f1e9c1232`: five evidence references, all verified to belong to the stored run. The model identified timeout followed by unsafe retry and recommended atomic idempotency enforcement. Its uncertainty, alternatives and risks are retained; the model did not decide verification pass/fail.
+- **Real UI evidence navigation verified:** clicking AI reference Event 7 selected the actual second ORDER_CREATED event (`1ef9009f-64a2-3b0b-ab58-36a3fc278d8d`) and updated the inspector. The AI panel displays NVIDIA and the actual Muse Glimmer model. Screenshot: `docs/nvidia-analysis-ui.jpg`.
+- **Deterministic verification PASSED:** original 2 orders / 1 duplicate → protected replay 1 order / 0 duplicates, with all five checks passing. Original evidence remains intact. No external production code was changed.
+- Latest automated checks: **32 backend tests, 0 failures/errors/skips; 5 frontend interaction tests passed; lint and production build passed.** Added request-format, secret-safe status, completion/truncation parsing, error mapping, provider routing, persisted provider metadata/caching, health and NVIDIA UI-label coverage. Tests mock providers and spend no credits. Evidence log: `docs/nvidia-validation.log` (ignored); safe live summary: `docs/nvidia-live-result.json`.
+- Three controlled generation requests were attempted in total: initial Llama 3.3 returned HTTP 410 Gone; catalog-confirmed Muse Glimmer timed out at the initial 30-second window; the final Muse request succeeded with the bounded 90-second window. One catalog query was also made. No blind/automatic retries or fabricated results were used. Exact token usage/account credits were not measured.
+- Backend, database and frontend connection are healthy. Services are intentionally **left running for the user's testing** at http://127.0.0.1:5173. Restart through the documented scripts after editing `.env`.
+
+Current readiness: the controlled simulator, NVIDIA-hosted Meta analysis, evidence links and deterministic verification have all been exercised end to end. Direct Meta Model API remains separately unverified. Remaining improvements: HTTP-server transport tests (current transport unit tests validate safe mapping/parsing), provider usage accounting, formal accessibility coverage and production authentication/deployment hardening. Successful saved analysis is cached; reopening or refreshing this tested run does not make another model call. Creating and investigating a new run can consume NVIDIA quota.
+
+---
+
+# Historical baseline report — 2026-10-29
 # TRACEBACK — implementation report
 
 Date: 2026-10-29, Asia/Calcutta. Project: **D:\TRACEBACK**. The uploaded complete specification is preserved as `MASTER_SPECIFICATION.md`.

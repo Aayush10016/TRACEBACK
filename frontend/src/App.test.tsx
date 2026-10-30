@@ -75,6 +75,35 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 describe("workspace interactions", () => {
+  it("labels the NVIDIA host and its backend-only key accurately", async () => {
+    const originalFetch = fetch;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        if (String(input).endsWith("/health")) {
+          return {
+            ok: true,
+            status: 200,
+            json: async () => ({
+              ...health,
+              meta: {
+                ...health.meta,
+                provider: "nvidia",
+                model: "meta/muse-glimmer-30b",
+                configured: true,
+              },
+            }),
+          } as Response;
+        }
+        return originalFetch(input, init);
+      }),
+    );
+    render(<App />);
+    await screen.findByText("NVIDIA configured · unverified");
+    fireEvent.click(screen.getByRole("button", { name: "System status" }));
+    expect(screen.getByText("NVIDIA_API_KEY")).toBeInTheDocument();
+    expect(screen.getByText("meta/muse-glimmer-30b")).toBeInTheDocument();
+  });
   it("shows honest empty metrics", async () => {
     render(<App />);
     await screen.findByText("Your first trace starts here");
@@ -95,7 +124,7 @@ describe("workspace interactions", () => {
       0,
     );
     expect(
-      screen.getByRole("button", { name: "Investigate with Meta" }),
+      screen.getByRole("button", { name: "Investigate trace" }),
     ).toBeDisabled();
     expect(fetch).toHaveBeenCalledWith(
       "/api/simulations/run",

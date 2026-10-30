@@ -34,3 +34,7 @@ Investigations are synchronized in this single-process application and saved out
 ## Scale and deployment limits
 
 The history list is bounded to 100 rows per request. Dashboard aggregation currently loads persisted runs and their latest artifacts, suitable for a local demonstration; use database aggregates before large datasets. No authentication or multi-user authorization is included. Both services bind to loopback; do not expose this development build to a public network without adding access control, request limits, TLS and deployment review.
+
+## Provider update — 2026-10-30
+
+`AiProviderRouter` is the primary InvestigationProvider bean. It selects `meta` or `nvidia` without automatic fallback; the NVIDIA client sends the saved trace only to its verified fixed NVIDIA HTTPS endpoint. The same size bounds, evidence ownership validation, saved-analysis caching, secret redaction, and independent verification apply. Provider and model are stored with each successful investigation. Successful historical analysis remains cached even if the current provider changes, retaining its original provider/model metadata.

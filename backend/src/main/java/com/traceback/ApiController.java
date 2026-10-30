@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
 public class ApiController {
   private final RunService runs;
   private final InvestigationService investigations;
-  private final MetaProvider meta;
+  private final AiProviderRouter ai;
   private final JdbcTemplate jdbc;
 
-  public ApiController(RunService r, InvestigationService i, MetaProvider m, JdbcTemplate j) {
+  public ApiController(RunService r, InvestigationService i, AiProviderRouter m, JdbcTemplate j) {
     runs = r;
     investigations = i;
-    meta = m;
+    ai = m;
     jdbc = j;
   }
 
@@ -31,7 +31,8 @@ public class ApiController {
   @GetMapping("/health")
   public Map<String, Object> health() {
     jdbc.queryForObject("SELECT 1", Integer.class);
-    return Map.of("backend", "UP", "database", "UP", "meta", meta.status());
+    var status = ai.status();
+    return Map.of("backend", "UP", "database", "UP", "ai", status, "meta", status);
   }
 
   @GetMapping("/dashboard")

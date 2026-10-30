@@ -115,6 +115,15 @@ export default function App() {
   const [health, setHealth] = useState<Health | null>(null),
     [stats, setStats] = useState<Stats | null>(null),
     [history, setHistory] = useState<Page | null>(null);
+  const ai = health?.ai ?? health?.meta;
+  const providerLabel =
+    ai?.provider === "nvidia"
+      ? "NVIDIA"
+      : ai?.provider === "meta"
+        ? "Meta"
+        : "AI";
+  const keyVariable =
+    ai?.provider === "nvidia" ? "NVIDIA_API_KEY" : "META_API_KEY";
   const [page, setPage] = useState(0),
     [query, setQuery] = useState(""),
     [scenario, setScenario] = useState<Scenario>("DUPLICATE_ORDER"),
@@ -251,7 +260,7 @@ export default function App() {
     });
   const investigate = () =>
     run &&
-    action("Investigating with Meta", async () => {
+    action("Investigating trace", async () => {
       setInvestigation(
         await request<Investigation>(`/investigations/${run.id}`, "POST"),
       );
@@ -275,14 +284,12 @@ export default function App() {
     const target = run?.events.find((e) => e.id === id);
     if (target) {
       setEvent(target);
-      document
-        .getElementById(`event-${id}`)
-        ?.scrollIntoView({
-          behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
-            ? "instant"
-            : "smooth",
-          block: "nearest",
-        });
+      document.getElementById(`event-${id}`)?.scrollIntoView({
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "instant"
+          : "smooth",
+        block: "nearest",
+      });
     }
   };
   const rows =
@@ -456,10 +463,10 @@ export default function App() {
             <span className="meta-indicator">
               <Sparkles size={13} />
               {investigation
-                ? "Meta response validated"
-                : health?.meta.configured
-                  ? "Meta configured · unverified"
-                  : "Meta not configured"}
+                ? `${investigation.provider.toUpperCase()} response validated`
+                : ai?.configured
+                  ? `${providerLabel} configured · unverified`
+                  : `${providerLabel} not configured`}
             </span>
             <span className="avatar">LT</span>
           </div>
@@ -825,7 +832,13 @@ export default function App() {
                       </h2>
                       <p>Hypotheses grounded in this run’s evidence</p>
                     </div>
-                    <span className="ai-tag">META</span>
+                    <span className="ai-tag">
+                      {(
+                        investigation?.provider ??
+                        ai?.provider ??
+                        "AI"
+                      ).toUpperCase()}
+                    </span>
                   </div>
                   {investigation ? (
                     <div className="panel-body analysis">
@@ -886,22 +899,22 @@ export default function App() {
                         <Sparkles size={27} />
                         <h3>Evidence before inference.</h3>
                         <p>
-                          {health?.meta.configured
-                            ? "Ask Meta to examine this stored trace. This sends one bounded request to the configured model."
-                            : "Meta is not configured. Add the backend API key to enable evidence-backed analysis."}
+                          {ai?.configured
+                            ? `Ask ${providerLabel} to examine this stored trace. This sends one bounded request to the configured model.`
+                            : `${providerLabel} is not configured. Add the backend API key to enable evidence-backed analysis.`}
                         </p>
                       </div>
                       <button
                         className="primary wide"
-                        disabled={!!busy || !health?.meta.configured}
+                        disabled={!!busy || !ai?.configured}
                         onClick={() => void investigate()}
                       >
                         <Sparkles size={15} />
-                        {busy === "Investigating with Meta"
+                        {busy === "Investigating trace"
                           ? "Analyzing trace…"
-                          : "Investigate with Meta"}
+                          : "Investigate trace"}
                       </button>
-                      {!health?.meta.configured && (
+                      {!ai?.configured && (
                         <button
                           className="text-button centered"
                           onClick={() => navigate("status")}
@@ -1236,25 +1249,25 @@ export default function App() {
                 <div className="panel-heading">
                   <h2>
                     <Sparkles size={16} />
-                    Meta Model API
+                    {providerLabel} model API
                   </h2>
-                  <Badge value={health?.meta.status ?? "NOT_VERIFIED"} />
+                  <Badge value={ai?.status ?? "NOT_VERIFIED"} />
                 </div>
                 <div className="panel-body">
                   <h3>
-                    {health?.meta.configured
+                    {ai?.configured
                       ? "Configured; authenticated access requires an investigation."
                       : "Ready when you configure it."}
                   </h3>
                   <p>
-                    {health?.meta.message ??
+                    {ai?.message ??
                       "Connect the backend to read integration status."}
                   </p>
                   <dl>
                     <dt>Provider</dt>
-                    <dd>{health?.meta.provider ?? "Unknown"}</dd>
+                    <dd>{ai?.provider ?? "Unknown"}</dd>
                     <dt>Model</dt>
-                    <dd>{health?.meta.model ?? "Unknown"}</dd>
+                    <dd>{ai?.model ?? "Unknown"}</dd>
                     <dt>Real response this session</dt>
                     <dd>
                       {investigation ? "Validated and stored" : "Not verified"}
@@ -1265,9 +1278,9 @@ export default function App() {
                     <div>
                       <strong>Backend environment only</strong>
                       <p>
-                        Set <code>META_API_KEY</code>, restart the backend, then
-                        explicitly run an investigation. Never place a key in
-                        frontend settings.
+                        Set <code>{keyVariable}</code>, restart the backend,
+                        then explicitly run an investigation. Never place a key
+                        in frontend settings.
                       </p>
                     </div>
                   </div>

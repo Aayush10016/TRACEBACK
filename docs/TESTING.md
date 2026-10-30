@@ -56,3 +56,9 @@ The real AI analysis panel and evidence-reference clicks with authenticated mode
 ## Repeating checks
 
 Stop the running backend before `run-tests.ps1`. Use an empty dedicated PostgreSQL database and the postgres profile for live smoke checks. Never use a production database for this demonstration. No automated test spends API credits or requires Meta credentials. A real-model integration check should be one explicit UI investigation on a new run after configuring an authorized key.
+
+## NVIDIA update — 2026-10-30
+
+Final `scripts/run-tests.ps1`: **32 backend tests passed**, **5 frontend interaction tests passed**, lint passed, production build passed. The additional backend tests cover NVIDIA's documented request fields, safe missing-key/status handling, normal/truncated/malformed completion parsing, safe HTTP errors, router isolation, unsupported provider selection, stored provider/model/cache metadata and provider-neutral health. The fifth frontend test validates NVIDIA labels/model/backend key variable. Automated tests never import the real `.env` or call the hosted model.
+
+Real integration testing: three explicit bounded generation attempts (retired Llama 3.3 HTTP 410, Muse 30-second timeout, Muse success after extending the response window). NVIDIA's current model catalog was queried once. Successful Muse investigation returned five valid evidence references. The same real run passed deterministic verification, 2 original orders to 1 protected order / zero duplicates. In the live UI, Event 7 evidence navigation selected the actual stored second order event and updated the inspector. Full safe result: `nvidia-live-result.json`; screenshot: `nvidia-analysis-ui.jpg`. Direct Meta access remains unverified. No exact credit or token-usage balance was measured.

@@ -56,3 +56,14 @@ The implemented request is `POST https://api.meta.ai/v1/chat/completions`, `Auth
 Analysis requires `rootCauseHypothesis`, `causalExplanation`, `evidenceEventIds`, `directEvidence`, `inference`, `alternativeExplanations`, `missingInformation`, `uncertainty`, `recommendedCorrection`, `verificationPlan`, and `risksAndAssumptions`. Evidence UUIDs must belong to the same stored run. JSON mode constrains syntax; Java validates the semantic contract. No real authenticated request was executed because credentials were not available. Documentation verification is separate from account/model access verification.
 
 Only the documented endpoint is accepted. The configured model can change within supported Meta access; use another provider by implementing the abstraction and verifying its official contract first. Do not point an API key at an unverified URL.
+
+## NVIDIA alternative — 2026-10-30
+
+`AI_PROVIDER=nvidia` routes explicit investigation requests through `NvidiaProvider`; `AI_PROVIDER=meta` retains the original direct provider. `NVIDIA_API_KEY` is backend-only and `NVIDIA_MODEL` defaults to `meta/muse-glimmer-30b`. Investigation records persist the selected provider and model rather than a hardcoded `meta` label. Health now includes `ai`, with `meta` retained as a compatibility alias.
+
+Official contract verified: https://docs.api.nvidia.com/nim/reference/meta-muse-glimmer-30b-infer. Fixed HTTPS endpoint `https://integrate.api.nvidia.com/v1/chat/completions`, Authorization bearer, model/messages, optional initial system message followed by user, `max_tokens` (bounded to 2000), temperature 0.95 and reasoning_effort none, non-streaming. Read `choices[0].message.content`; require one completed choice with finish_reason `stop`. JSON is requested through the prompt, then strictly checked by the existing analysis/evidence validator. No unsupported developer-role/max_completion_tokens/response_format parameters are sent to NVIDIA.
+
+Keys and provider error bodies are never returned. HTTP 401/403 map to safe key/model-access errors, 429 to quota/rate-limit feedback, 202 to an explicit pending/unsupported-polling state, 400/404/422 to model/request configuration errors, and other failures to a safe upstream error. No automatic retry, job polling or fallback to a different account occurs. NVIDIA's actual account access and quotas require a controlled real request.
+
+
+The live catalog check on 2026-10-30 supersedes the initial Llama 3.3 selection: that older model returned HTTP 410 Gone. The selected model is meta/muse-glimmer-30b, verified against NVIDIA's live /v1/models catalog and its official Muse Glimmer reference. The first Muse request timed out at 30 seconds; the client now allows a bounded 90-second read window (5-second connect), and the frontend allows 100 seconds for investigation POSTs. No automatic model fallback or retry occurs.

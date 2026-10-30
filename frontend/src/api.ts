@@ -97,6 +97,13 @@ export interface Investigation {
 export interface Health {
   backend: string;
   database: string;
+  ai?: {
+    configured: boolean;
+    status: string;
+    message: string;
+    model: string;
+    provider: string;
+  };
   meta: {
     configured: boolean;
     status: string;
@@ -122,7 +129,9 @@ export async function request<T>(
     method,
     headers: body ? { "Content-Type": "application/json" } : undefined,
     body: body ? JSON.stringify(body) : undefined,
-    signal: AbortSignal.timeout(45000),
+    signal: AbortSignal.timeout(
+      path.startsWith("/investigations/") && method === "POST" ? 100000 : 45000,
+    ),
   });
   if (!response.ok) {
     let message = "The service could not complete this request.";

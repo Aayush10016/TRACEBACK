@@ -19,7 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest(
     properties = {
       "spring.datasource.url=jdbc:h2:mem:tests;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1",
-      "traceback.meta.key="
+      "traceback.meta.key=",
+      "traceback.ai.provider=meta"
     })
 @AutoConfigureMockMvc
 class ApiTest {
