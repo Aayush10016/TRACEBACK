@@ -1,0 +1,26 @@
+{
+  "newModelCalls": 0,
+  "mobileOverflow": false,
+  "evidenceNavigationVerified": true,
+  "liveNormalRun": "bb31cf40-4dd2-4963-ac26-d5e8d7070ed7",
+  "backendChanged": false,
+  "databaseHealth": "UP",
+  "mobileViewport": "390x844",
+  "backendHealth": "UP",
+  "date": "2026-10-30",
+  "frontendLint": "PASSED",
+  "lastBackendTests": 32,
+  "screensInspected": [
+    "overview",
+    "investigation",
+    "verification",
+    "history",
+    "status"
+  ],
+  "mobileDocumentWidth": 380,
+  "backendRerunForUiChange": false,
+  "frontendBuild": "PASSED",
+  "liveVerification": "PASSED",
+  "desktopViewport": "1366x900",
+  "frontendTests": 6
+}

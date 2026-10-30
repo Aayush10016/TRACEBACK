@@ -1,3 +1,18 @@
+# Latest UI refinement — 2026-10-30
+
+Applied a more minimal graphite interface across all five screens. Reduced decorative gradients/cards, removed the sidebar promotional panel/version/fake avatar, simplified page labels, and introduced restrained off-white actions, neutral navigation, quieter status indicators and larger, more consistent text. The overview now prioritizes its action, real metrics and recent runs.
+
+The investigation keeps the actual hypothesis, linked evidence and correction visible. Longer causal reasoning, verification plans and technical event metadata remain available through accessible expandable sections. The desktop timeline stays in view while reading analysis. No analysis is truncated, fabricated or replaced. The original NVIDIA integration, key configuration, persistence and deterministic verifier are unchanged.
+
+Also fixed stale dashboard data on navigation; a new regression test confirms newly persisted counts appear when returning to Overview. Mobile QA found an absolutely positioned accessible table label escaping its scroll container; positioning the container resolved page overflow while retaining table scrolling and the label. The simulation-dialog heading was adjusted for phone readability. Configuration text is more concise; analysis status explicitly refers to the selected run.
+
+Validation: **6 frontend interaction tests passed; lint passed; TypeScript/Vite production build passed.** Backend code was not changed or rerun for this UI-only pass; its last verified run remains **32/32 passing**. The new normal-order run `bb31cf40-4dd2-4963-ac26-d5e8d7070ed7` was launched through the phone dialog, created one order and passed live deterministic verification. Existing real NVIDIA evidence navigation still selects the correct stored event. No new model generation requests were made.
+
+Visually checked Overview, Investigation, Verification, History and System Status at representative laptop and phone dimensions. At a 390px viewport, the document width is 380px with a scrollbar and no page overflow. Formal screen-reader/contrast audits remain unperformed. The preview initially cached an empty new stylesheet during file creation; restarting only Vite resolved it. A TypeScript error in the new test's selector options was corrected, then all final checks passed.
+
+Files: `frontend/src/refinement.css`, `App.tsx`, `main.tsx`, `App.test.tsx`; screenshot `docs/minimal-ui-overview.jpg`; safe QA summary `docs/ui-refinement-results.json`; ignored logs `docs/ui-refinement-{tests,lint,build}.log`. Current production assets are approximately 258.09kB JS (79.98kB gzip) and 40.95kB CSS (9.84kB gzip). Services remain running at http://127.0.0.1:5173 for user testing. Earlier baseline reports follow below.
+
+---
 # Current update — NVIDIA integration verified, 2026-10-30
 
 This update supersedes the AI-readiness limitations in the historical 2026-10-29 baseline report below.

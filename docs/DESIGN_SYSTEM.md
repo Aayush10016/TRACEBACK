@@ -1,21 +1,27 @@
 # Design system and UI
 
-## Direction
+## Current direction — minimal graphite
 
-Graphite surfaces, precise typography, restrained blue/cyan accents, clear evidence hierarchy. Figma composition: https://www.figma.com/design/K7qGxbod6fHYBYC8OrHovF. It is an editable design-direction composition with illustrative text clearly labeled, not a live-data prototype or a completed reusable component library. The screenshot is `figma-direction.png`. The actual React product uses backend values exclusively.
+The product uses neutral graphite surfaces with restrained blue-gray, green and coral only where they support selection or status. Large decorative gradients, boxed workflow art, the sidebar promotion, the decorative version badge and fictitious avatar have been removed. The primary action is off-white. Spacing, typography and borders provide hierarchy.
 
-## Tokens and components
+`frontend/src/styles.css` contains the base responsive component system. `frontend/src/refinement.css`, imported after it, defines the current refinement and overrides: background `#0E1013`, surface `#14161B`, elevated `#1B1E24`, subtle border `#FFFFFF0F`, text `#E7E9ED`, muted `#959AA5`, accent `#B6C5DF`, mint `#94C4AA`, coral `#D898A0`, and an 8px panel radius. Typography uses Inter with Segoe UI/system fallback, and Cascadia Code/Consolas for technical values. System fallbacks remain functional when Google Fonts is unavailable.
 
-`frontend/src/styles.css` owns background `#0B0D12`, surface `#11151D`, elevated surface `#171D28`, border `#242C3B`, text `#E8EDF7`, muted `#929FB3`, blue `#91B9FF`, cyan `#83DCE9`, mint `#80D6B1`, coral `#FF929C`, 9px panel radius, 24px base spacing and 140ms transitions. Application text uses Inter with Segoe UI/system fallback; technical IDs use Cascadia Code/Consolas. Inter is requested through Google Fonts; the app remains usable offline with fallbacks.
+## Information hierarchy
 
-Reusable patterns include Badge, Empty, CopyId, typed API helpers, shared table rendering, panel headings, primary/secondary/icon buttons, timeline events, status rows, loading bars and notifications. Pages are composed in App.tsx; further component extraction is a P2 maintenance improvement.
+- Overview: one restrained introductory region, a clear simulation action, unboxed database metrics and recent run history.
+- Investigation: the actual hypothesis, linked evidence and recommendation are visible first. Supporting causal explanation, verification plan, alternatives, missing information and risks remain expandable. Event essentials stay visible; IDs/timestamp/correlation/key and JSON metadata are expandable. The timeline stays visible while reading on desktop.
+- Verification: actual before/after values, a functional execution action, measured checks and a protected replay.
+- History: persisted rows, clearly labeled current-page filtering, bounded pagination and reopening.
+- Status: safe service and selected-provider configuration. No API key is displayed; selected-run analysis is distinguished from key configuration.
 
-## Screens
+All metrics and event/analysis values still come from the backend. No new model requests are needed to open saved analysis. Dashboard/history data refreshes when navigating, so external persisted updates do not remain stale.
 
-Overview explains the workflow, opens the scenario dialog, shows actual aggregates, useful empty states and recent runs. Investigation exposes the original run, chronological event timeline, selected-event inspector, expandable metadata, AI configuration/analysis panel and verification action. AI references select and scroll to actual events. Verification compares actual before/after values, displays five checks and the separate protected replay. History offers bounded pages, a current-page text filter and reopening. System status safely exposes service/database readiness, provider/model and honest credential-access state.
+## Responsive and accessible behavior
 
-## Accessibility and responsive behavior
+Desktop sidebar becomes a scrollable horizontal navigation under 700px; the investigation stacks under 980px. Tables scroll inside positioned containers, preventing the accessible table label from creating page overflow. Status uses text and icons/dots in addition to color. Semantic controls, visible focus, a skip link, dialog focus containment/Escape and reduced-motion support are retained. Native expandable sections preserve keyboard access to supporting details.
 
-Semantic navigation/buttons, labels, keyboard focus outlines, skip link, dialog focus containment and Escape handling, status text/icons as well as color, reduced-motion support. Loading requests disable their actions; missing AI credentials disable paid investigation while preserving simulation and verification.
+The live product was inspected at 1366×900 and 390×844. All five screens, saved AI evidence links, expanded event details, a new normal simulation and verification were checked. The mobile page fits its viewport. Formal accessibility/screen-reader and browser-matrix audits have not been performed.
 
-The desktop sidebar becomes horizontal mobile navigation under 700px. Investigation stacks under 980px; tables scroll within their own container. Laptop QA uses 1366×900; phone QA uses 390×844. Automated accessibility auditing and assistive-technology testing have not been performed. Recorded visual/manual outcomes are in REPORT.md.
+## Design reference and evidence
+
+The initial editable Figma direction remains at https://www.figma.com/design/K7qGxbod6fHYBYC8OrHovF. It represents the original visual direction, not the latest refined implementation or a completed component library. Current implementation evidence: `minimal-ui-overview.jpg` and `ui-refinement-results.json`. Details and actual test outcomes are in REPORT.md and TESTING.md.

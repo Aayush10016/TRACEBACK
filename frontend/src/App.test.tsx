@@ -75,6 +75,36 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 describe("workspace interactions", () => {
+  it("refreshes persisted dashboard data when returning to overview", async () => {
+    let recordedRuns = 0;
+    const originalFetch = fetch;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        if (String(input).endsWith("/dashboard"))
+          return {
+            ok: true,
+            status: 200,
+            json: async () => ({
+              totalRuns: recordedRuns,
+              totalInvestigations: 0,
+              failedSimulations: 0,
+              duplicateOrders: 0,
+              verifiedRuns: 0,
+              verificationPassRate: -1,
+            }),
+          } as Response;
+        return originalFetch(input, init);
+      }),
+    );
+    render(<App />);
+    await screen.findByText("0 simulation runs recorded");
+    recordedRuns = 3;
+    fireEvent.click(screen.getByRole("button", { name: "Run history" }));
+    await screen.findByRole("heading", { name: "Run history", level: 1 });
+    fireEvent.click(screen.getByRole("button", { name: "Overview" }));
+    await screen.findByText("3 simulation runs recorded");
+  });
   it("labels the NVIDIA host and its backend-only key accurately", async () => {
     const originalFetch = fetch;
     vi.stubGlobal(
@@ -99,7 +129,7 @@ describe("workspace interactions", () => {
       }),
     );
     render(<App />);
-    await screen.findByText("NVIDIA configured · unverified");
+    await screen.findByText("NVIDIA configured");
     fireEvent.click(screen.getByRole("button", { name: "System status" }));
     expect(screen.getByText("NVIDIA_API_KEY")).toBeInTheDocument();
     expect(screen.getByText("meta/muse-glimmer-30b")).toBeInTheDocument();

@@ -184,7 +184,7 @@ export default function App() {
   );
   useEffect(() => {
     void refresh();
-  }, [refresh]);
+  }, [refresh, view]);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [view]);
@@ -303,18 +303,18 @@ export default function App() {
     <div className="page-heading">
       <div>
         <div className="eyebrow">
-          CONTROLLED ENVIRONMENT <span>/</span> LOCAL WORKSPACE
+          TRACEBACK <span>/</span> WORKSPACE
         </div>
         <h1>
           {view === "overview"
-            ? "Every failure leaves a trace."
+            ? "Overview"
             : view === "investigation"
               ? "Investigation workspace"
               : view === "verification"
-                ? "Prove the correction."
+                ? "Verification"
                 : view === "history"
-                  ? "Your evidence, preserved."
-                  : "A clear view of your system."}
+                  ? "Run history"
+                  : "System status"}
         </h1>
         <p>
           {view === "overview"
@@ -410,13 +410,11 @@ export default function App() {
           <span className="brand-symbol">
             <GitBranch size={22} />
           </span>
-          TRACEBACK<span className="version">01</span>
+          TRACEBACK
         </a>
         <div className="workspace-label">
-          <span className="workspace-avatar">T</span>
-          <div>
-            Local workspace<small>Development environment</small>
-          </div>
+          <span className="workspace-dot" /> Local workspace{" "}
+          <span className="workspace-mode">DEV</span>
         </div>
         <div className="nav-caption">WORKSPACE</div>
         <nav aria-label="Main navigation">
@@ -433,16 +431,7 @@ export default function App() {
             </button>
           ))}
         </nav>
-        <div className="sidebar-note">
-          <FlaskConical size={18} />
-          <strong>Understand by reproducing.</strong>
-          <p>
-            Deterministic scenarios.
-            <br />
-            Evidence you can inspect.
-          </p>
-          <span>SIMULATION SANDBOX</span>
-        </div>
+        <div className="sidebar-spacer" />
         <button className="sidebar-health" onClick={() => navigate("status")}>
           <i className={health ? "online" : "offline"} />
           <div>
@@ -465,10 +454,11 @@ export default function App() {
               {investigation
                 ? `${investigation.provider.toUpperCase()} response validated`
                 : ai?.configured
-                  ? `${providerLabel} configured · unverified`
+                  ? `${providerLabel} configured`
                   : `${providerLabel} not configured`}
             </span>
-            <span className="avatar">LT</span>
+            <span className="topbar-divider" />
+            <span className="local-label">Local only</span>
           </div>
         </header>
         <main id="main">
@@ -511,19 +501,18 @@ export default function App() {
           {view === "overview" && (
             <>
               <section className="hero">
-                <div>
-                  <span className="section-kicker">
-                    <span className="pulse-dot" /> FAILURE IS A STARTING POINT
-                  </span>
+                <div className="hero-title">
+                  <span className="section-kicker">INCIDENT INTELLIGENCE</span>
                   <h2>
-                    From “something broke”
+                    Understand the failure.
                     <br />
-                    to <em>“here’s the proof.”</em>
+                    <em>Prove the fix.</em>
                   </h2>
+                </div>
+                <div className="hero-action">
                   <p>
-                    Launch a controlled order flow, inspect the execution trace,
-                    <br className="desktop-break" /> and test a correction with
-                    deterministic verification.
+                    A clear path from a reproducible failure
+                    <br className="desktop-break" /> to evidence you can trust.
                   </p>
                   <button
                     ref={launchButton}
@@ -531,41 +520,13 @@ export default function App() {
                     disabled={!!busy || !health}
                     onClick={() => setModal(true)}
                   >
-                    <Play size={15} />
+                    <Play size={14} />
                     Start a simulation
-                    <ArrowRight size={15} />
+                    <ArrowRight size={14} />
                   </button>
-                </div>
-                <div
-                  className="flow-map"
-                  aria-label="Workflow: reproduce, investigate, verify"
-                >
-                  <div>
-                    <span className="flow-icon">
-                      <Terminal size={20} />
-                    </span>
-                    <span>01</span>
-                    <strong>Reproduce</strong>
-                    <small>Deterministic trace</small>
-                  </div>
-                  <div className="flow-connector" />
-                  <div>
-                    <span className="flow-icon cyan">
-                      <Search size={20} />
-                    </span>
-                    <span>02</span>
-                    <strong>Investigate</strong>
-                    <small>Evidence-backed analysis</small>
-                  </div>
-                  <div className="flow-connector" />
-                  <div>
-                    <span className="flow-icon green">
-                      <ShieldCheck size={20} />
-                    </span>
-                    <span>03</span>
-                    <strong>Verify</strong>
-                    <small>Executable proof</small>
-                  </div>
+                  <span className="hero-caption">
+                    Deterministic scenarios. No real payments.
+                  </span>
                 </div>
               </section>
               <section className="stats" aria-label="Workspace statistics">
@@ -798,24 +759,27 @@ export default function App() {
                     <div className="panel-body">
                       <h3>{event.type.replaceAll("_", " ")}</h3>
                       <p>{event.message}</p>
-                      <dl>
-                        <dt>Event ID</dt>
-                        <dd>
-                          <CopyId id={event.id} />
-                        </dd>
-                        <dt>Timestamp</dt>
-                        <dd>{new Date(event.timestamp).toISOString()}</dd>
-                        <dt>Component</dt>
-                        <dd>{event.component}</dd>
-                        <dt>Correlation ID</dt>
-                        <dd>
-                          <code>{event.correlationId}</code>
-                        </dd>
-                        <dt>Idempotency key</dt>
-                        <dd>
-                          <code>{event.idempotencyKey}</code>
-                        </dd>
-                      </dl>
+                      <details className="inspector-details">
+                        <summary>Event details</summary>
+                        <dl>
+                          <dt>Event ID</dt>
+                          <dd>
+                            <CopyId id={event.id} />
+                          </dd>
+                          <dt>Timestamp</dt>
+                          <dd>{new Date(event.timestamp).toISOString()}</dd>
+                          <dt>Component</dt>
+                          <dd>{event.component}</dd>
+                          <dt>Correlation ID</dt>
+                          <dd>
+                            <code>{event.correlationId}</code>
+                          </dd>
+                          <dt>Idempotency key</dt>
+                          <dd>
+                            <code>{event.idempotencyKey}</code>
+                          </dd>
+                        </dl>
+                      </details>
                       <details>
                         <summary>Structured metadata</summary>
                         <pre>{JSON.stringify(event.metadata, null, 2)}</pre>
@@ -845,9 +809,13 @@ export default function App() {
                       <span className="section-kicker">
                         AI-GENERATED · {investigation.model}
                       </span>
-                      <h3>{investigation.analysis.rootCauseHypothesis}</h3>
-                      <p>{investigation.analysis.causalExplanation}</p>
-                      <h4>Referenced evidence</h4>
+                      <div className="hypothesis-block">
+                        <h3>Root-cause hypothesis</h3>
+                        <p className="hypothesis">
+                          {investigation.analysis.rootCauseHypothesis}
+                        </p>
+                      </div>
+                      <h4>Linked evidence</h4>
                       <div className="evidence-list">
                         {investigation.analysis.evidenceEventIds.map((id) => (
                           <button key={id} onClick={() => selectEvidence(id)}>
@@ -858,16 +826,27 @@ export default function App() {
                           </button>
                         ))}
                       </div>
-                      <h4>Direct evidence</h4>
-                      <p>{investigation.analysis.directEvidence}</p>
-                      <h4>Inference</h4>
-                      <p>{investigation.analysis.inference}</p>
-                      <h4>Recommended correction</h4>
-                      <p>{investigation.analysis.recommendedCorrection}</p>
-                      <h4>Verification plan</h4>
-                      <p>{investigation.analysis.verificationPlan}</p>
-                      <h4>Uncertainty</h4>
-                      <p>{investigation.analysis.uncertainty}</p>
+                      <div className="recommendation-block">
+                        <h4>Recommended correction</h4>
+                        <p>{investigation.analysis.recommendedCorrection}</p>
+                      </div>
+                      <details className="analysis-disclosure">
+                        <summary>Evidence & causal explanation</summary>
+                        <h4>Direct evidence</h4>
+                        <p>{investigation.analysis.directEvidence}</p>
+                        <h4>Causal explanation</h4>
+                        <p>{investigation.analysis.causalExplanation}</p>
+                        <h4>Inference</h4>
+                        <p>{investigation.analysis.inference}</p>
+                      </details>
+                      <details className="analysis-disclosure">
+                        <summary>Verification plan</summary>
+                        <p>{investigation.analysis.verificationPlan}</p>
+                      </details>
+                      <div className="uncertainty-note">
+                        <span>Uncertainty</span>
+                        <p>{investigation.analysis.uncertainty}</p>
+                      </div>
                       {(
                         [
                           "alternativeExplanations",
@@ -1268,9 +1247,9 @@ export default function App() {
                     <dd>{ai?.provider ?? "Unknown"}</dd>
                     <dt>Model</dt>
                     <dd>{ai?.model ?? "Unknown"}</dd>
-                    <dt>Real response this session</dt>
+                    <dt>Selected run analysis</dt>
                     <dd>
-                      {investigation ? "Validated and stored" : "Not verified"}
+                      {investigation ? "Validated and stored" : "Not run"}
                     </dd>
                   </dl>
                   <div className="config-note">
