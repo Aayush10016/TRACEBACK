@@ -41,7 +41,7 @@ const run = {
   ],
 };
 beforeEach(() => {
-  location.hash = "";
+  location.hash = "view=overview";
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string, options?: RequestInit) => {
@@ -102,7 +102,7 @@ describe("workspace interactions", () => {
     recordedRuns = 3;
     fireEvent.click(screen.getByRole("button", { name: "Run history" }));
     await screen.findByRole("heading", { name: "Run history", level: 1 });
-    fireEvent.click(screen.getByRole("button", { name: "Overview" }));
+    fireEvent.click(screen.getByRole("button", { name: "Simulation lab" }));
     await screen.findByText("3 simulation runs recorded");
   });
   it("labels the NVIDIA host and its backend-only key accurately", async () => {

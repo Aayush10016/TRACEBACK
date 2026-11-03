@@ -72,3 +72,7 @@ Browser QA: all five screens; 1366×900 laptop and 390×844 phone; saved NVIDIA 
 ## Final release QA — 2026-11-03
 
 37 backend tests and 8 frontend tests passed; lint and production build passed. Production-profile smoke confirmed protected bundled website/assets, NVIDIA configuration, simulation/verification, cross-origin rejection and abrupt-restart persistence after enabling synchronous H2 writes. See REPORT.md, release-smoke-results.json and WEBSITE_AUDIT.md. No paid model requests in this pass. Docker image remains untested because its engine is stopped.
+
+## Uploaded Maven projects — 2026-11-03
+
+48 backend and 11 frontend tests passed, lint/build passed. Real Docker ZIP execution: passing JUnit, failing JUnit, no-tests and Spring Boot 3.5.15 context outcomes confirmed, with actual counts and safe summaries in uploaded-project-results.json. Docker engine and both images built; web runtime checked separately without Docker control access. See current REPORT.md and PROJECT_UPLOADS.md for the exact deployment boundary and resolved issues. No new model calls.

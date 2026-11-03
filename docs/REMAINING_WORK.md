@@ -30,3 +30,7 @@ The P0 real-AI demonstration above has now been completed using NVIDIA-hosted Me
 ## Superseding release status — 2026-11-03
 
 Combined frontend/backend deployment JAR, NVIDIA-only production setup, shared password gate and cross-origin write protection are implemented and tested. Timeline/mobile defects and recovery flows fixed. Public hosting and final HTTPS/host checks still remain. Docker engine is unavailable; image not built. The shared gate is not per-user auth or comprehensive quota control. Formal accessibility, broad browser/load tests and provider HTTP-server transport suites remain future work.
+
+## Uploaded project update — 2026-11-03
+
+Java 17 Maven/Spring ZIP upload and real Docker execution are now implemented/tested. Public uploaded-code hosting still needs a dedicated Docker-capable host or separately reviewed worker architecture; no web-container control-socket mount was approved. Add disk/retention quotas, per-user authorization and stronger hostile-workload isolation before multi-tenant use. Other build systems/runtimes and automatic per-file test generation are not supported.

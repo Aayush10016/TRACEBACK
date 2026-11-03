@@ -67,3 +67,7 @@ Keys and provider error bodies are never returned. HTTP 401/403 map to safe key/
 
 
 The live catalog check on 2026-10-30 supersedes the initial Llama 3.3 selection: that older model returned HTTP 410 Gone. The selected model is meta/muse-glimmer-30b, verified against NVIDIA's live /v1/models catalog and its official Muse Glimmer reference. The first Muse request timed out at 30 seconds; the client now allows a bounded 90-second read window (5-second connect), and the frontend allows 100 seconds for investigation POSTs. No automatic model fallback or retry occurs.
+
+## Uploaded project APIs
+
+GET /api/projects (latest 20 jobs), GET /api/projects/runner, POST /api/projects (multipart field file, ZIP <=20 MB), GET /api/projects/{id}, POST /api/projects/{id}/test (JSON downloadDependencies boolean). Starts are explicit and serialized; competing starts return 409, unavailable Docker returns 503, missing file 400, oversized upload 413. Terminal statuses include PASSED, TESTS_FAILED, NO_TESTS, BUILD_FAILED, DEPENDENCY_FAILED, TIMED_OUT, ERROR and INTERRUPTED. Sources/results stay on the app server; no NVIDIA calls for this workflow. See PROJECT_UPLOADS.md.

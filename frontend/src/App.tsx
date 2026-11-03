@@ -1,3 +1,4 @@
+import ProjectWorkspace from "./ProjectWorkspace";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import {
@@ -38,13 +39,15 @@ import type {
   Verification,
 } from "./api";
 type View =
+  | "projects"
   | "overview"
   | "investigation"
   | "verification"
   | "history"
   | "status";
 const nav = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
+  { id: "projects", label: "Project tests", icon: FlaskConical },
+  { id: "overview", label: "Simulation lab", icon: LayoutDashboard },
   { id: "investigation", label: "Investigation", icon: GitBranch },
   { id: "verification", label: "Verification", icon: ShieldCheck },
   { id: "history", label: "Run history", icon: History },
@@ -106,7 +109,7 @@ export default function App() {
   const [view, setView] = useState<View>(
     (nav.some((n) => n.id === initial.get("view"))
       ? initial.get("view")
-      : "overview") as View,
+      : "projects") as View,
   );
   const [run, setRun] = useState<Run | null>(null),
     [event, setEvent] = useState<TraceEvent | null>(null),
@@ -307,26 +310,30 @@ export default function App() {
           TRACEBACK <span>/</span> WORKSPACE
         </div>
         <h1>
-          {view === "overview"
-            ? "Overview"
-            : view === "investigation"
-              ? "Investigation workspace"
-              : view === "verification"
-                ? "Verification"
-                : view === "history"
-                  ? "Run history"
-                  : "System status"}
+          {view === "projects"
+            ? "Project tests"
+            : view === "overview"
+              ? "Simulation lab"
+              : view === "investigation"
+                ? "Investigation workspace"
+                : view === "verification"
+                  ? "Verification"
+                  : view === "history"
+                    ? "Run history"
+                    : "System status"}
         </h1>
         <p>
-          {view === "overview"
-            ? "Reproduce the failure. Follow the evidence. Verify what works."
-            : view === "investigation"
-              ? "A complete record of what happened — and the evidence behind why."
-              : view === "verification"
-                ? "Executable checks, measured outcomes, and an untouched original trace."
-                : view === "history"
-                  ? "Reopen any recorded run and continue where you left off."
-                  : "Service health and integration readiness. Credentials stay on the backend."}
+          {view === "projects"
+            ? "Upload your Java project. Run its tests. Inspect the actual results."
+            : view === "overview"
+              ? "Reproduce the failure. Follow the evidence. Verify what works."
+              : view === "investigation"
+                ? "A complete record of what happened — and the evidence behind why."
+                : view === "verification"
+                  ? "Executable checks, measured outcomes, and an untouched original trace."
+                  : view === "history"
+                    ? "Reopen any recorded run and continue where you left off."
+                    : "Service health and integration readiness. Credentials stay on the backend."}
         </p>
       </div>
       {(view === "investigation" || view === "verification") && run ? (
@@ -340,7 +347,8 @@ export default function App() {
         </button>
       ) : (
         <span className="environment">
-          <Radio size={13} /> Controlled simulation
+          <Radio size={13} />{" "}
+          {view === "projects" ? "Uploaded projects" : "Controlled simulation"}
         </span>
       )}
     </div>
@@ -418,8 +426,8 @@ export default function App() {
       <aside className="sidebar">
         <a
           className="brand"
-          href="#view=overview"
-          onClick={() => navigate("overview")}
+          href="#view=projects"
+          onClick={() => navigate("projects")}
         >
           <span className="brand-symbol">
             <GitBranch size={22} />
@@ -465,13 +473,15 @@ export default function App() {
           <div className="top-actions">
             <span className="meta-indicator">
               <Sparkles size={13} />
-              {investigation
-                ? `${investigation.provider.toUpperCase()} response validated`
-                : ai?.configured
-                  ? `${providerLabel} configured`
-                  : health
-                    ? `${providerLabel} not configured`
-                    : "Backend unavailable"}
+              {view === "projects"
+                ? "Java 17 · Maven tests"
+                : investigation
+                  ? `${investigation.provider.toUpperCase()} response validated`
+                  : ai?.configured
+                    ? `${providerLabel} configured`
+                    : health
+                      ? `${providerLabel} not configured`
+                      : "Backend unavailable"}
             </span>
             <span className="topbar-divider" />
             <span className="local-label">Demo workspace</span>
@@ -518,6 +528,7 @@ export default function App() {
               {busy}…
             </div>
           )}
+          {view === "projects" && <ProjectWorkspace />}
           {view === "overview" && (
             <>
               <section className="hero">

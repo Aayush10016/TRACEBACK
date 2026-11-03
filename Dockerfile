@@ -3,13 +3,13 @@ WORKDIR /build/frontend
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./
-RUN npm run build
+RUN npm run test && npm run lint && npm run build
 
 FROM maven:3.9.16-eclipse-temurin-17 AS backend
 WORKDIR /build
 COPY backend/ backend/
 COPY --from=ui /build/frontend/dist/ frontend/dist/
-RUN mvn -f backend/pom.xml -Prelease --no-transfer-progress verify
+RUN --mount=type=cache,target=/root/.m2 mvn -f backend/pom.xml -Prelease --no-transfer-progress verify
 
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app

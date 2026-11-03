@@ -1,3 +1,9 @@
+# Uploaded-project execution update
+
+For the new Java ZIP test workflow, follow PROJECT_UPLOADS.md and run the Java JAR on a dedicated Docker-capable host with the runner image built. The web container is deliberately not granted Docker control access. Its runner status is unavailable. The Docker web image has now been built and runtime-tested; earlier statements below saying Docker was stopped are historical. Public hosting is still not performed.
+
+---
+
 # Deploy TRACEBACK for the hackathon
 
 Current demo uses NVIDIA-hosted Meta Muse Glimmer only. It is a Java service with the built React website embedded in its JAR. A static-only host cannot run the backend. Do not expose Vite's development server.

@@ -1,0 +1,5 @@
+FROM maven:3.9.16-eclipse-temurin-17
+RUN mkdir -p /input /workspace /cache /reports && chown -R 1000:1000 /input /workspace /cache /reports
+ENV HOME=/tmp
+USER 1000:1000
+WORKDIR /workspace

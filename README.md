@@ -4,6 +4,12 @@ Every failure has a cause. Find it, prove it, and prevent it from happening agai
 
 A local incident investigation application for deterministic e-commerce simulations. Java 17 / Spring Boot 3.5.15, React / TypeScript / Vite, JPA / Flyway, PostgreSQL or persistent H2. All source and runtime data stay under `D:\TRACEBACK`.
 
+## Test an uploaded Java project
+
+The default **Project tests** screen accepts your own Java 17 Maven/Spring project ZIP. Start Docker Desktop, run `scripts/build-runner.ps1` once, open http://127.0.0.1:8080/#view=projects, upload a ZIP with `pom.xml`, source and existing tests, allow dependency preparation when needed, then choose **Run project tests**. Results show real counts, failures and output; empty/skipped suites are not marked passed. No NVIDIA credits are used. See [Project uploads](docs/PROJECT_UPLOADS.md) for limits and deployment support.
+
+The original examples remain separate in **Simulation lab**. For uploaded-code execution, use the Java JAR on a dedicated Docker-capable host. The Docker web image has no Docker control-socket access and reports its runner unavailable.
+
 ## Quick start (Windows PowerShell)
 
 Prerequisites: Java 17 on PATH, Node 22.12+ (Node 24 tested), npm, Git, and an internet connection for first dependency installation. Scripts bootstrap Maven **3.9.16** into `.tools`; no global tool configuration is changed. PostgreSQL is optional for the local H2 profile.

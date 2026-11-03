@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-03",
+  "fixtures": [
+    {
+      "fixture": "passing",
+      "id": "6abeb3f7-1266-4556-9690-409e364c3b9d",
+      "status": "PASSED",
+      "files": 3,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "fixture": "failing",
+      "id": "cf1fbd5d-0dde-4744-9e2c-a2d434829886",
+      "status": "TESTS_FAILED",
+      "files": 3,
+      "counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "fixture": "no-tests",
+      "id": "ce120005-c7bc-42ec-a1b5-0628e586518b",
+      "status": "NO_TESTS",
+      "files": 2,
+      "counts": {
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "fixture": "spring",
+      "id": "2b9ca523-d9f5-42ce-9539-08dc8fd47d84",
+      "status": "PASSED",
+      "files": 3,
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "modelCalls": 0,
+  "notes": [
+    "Failing and no-test fixture caches seeded with the passing fixture public Maven artifacts to avoid repeated downloads.",
+    "First failure fixture dependency download was interrupted by the repository; shown as DEPENDENCY_FAILED before the successful offline failure check.",
+    "An initial Spring dependency-resolution failure was fixed; final Spring context test passed.",
+    "All results above are actual configured tests, not generated per-file coverage."
+  ]
+}

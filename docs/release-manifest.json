@@ -1,15 +1,18 @@
 {
   "TRACEBACK-release.jar": {
-    "bytes": 60324208,
-    "sha256": "36c3727a5c68a69499041bcfa3606c27d785530610696286aaea007f3f3a0597"
+    "bytes": 60604222,
+    "sha256": "2f43ee6518d03c1ab7712621b49f5a5d80047b3ce369246348741ca58dda165b"
   },
   "TRACEBACK-source.zip": {
-    "bytes": 903534,
-    "sha256": "10f21cd510550bcb613d4e2eb213e822740e9806c48ced22c7e4784efb629b14"
+    "bytes": 1094678,
+    "sha256": "be83cb8e209883a4bf3aef05a45a356094655e74991ab848a83aa6e551f504fb"
   },
   "privateKeyAbsent": true,
-  "localDatabaseExcluded": true,
+  "uploadedSourcesAndDatabasesExcluded": true,
   "generatedAt": "2026-11-03",
-  "backendTests": 37,
-  "frontendTests": 8
+  "backendTests": 48,
+  "frontendTests": 11,
+  "realZipCases": 4,
+  "dockerWebImage": "sha256:4b4972b940f15c59b684b3de7684cc5cd3c265e429d676db74a7b4b1e386e3ce",
+  "uploadExecutionDeployment": "Java JAR on a dedicated Docker-capable host; no web-container Docker control mount"
 }

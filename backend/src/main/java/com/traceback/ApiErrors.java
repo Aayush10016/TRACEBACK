@@ -65,6 +65,14 @@ public class ApiErrors {
         "Send the request body as application/json.");
   }
 
+  @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+  ResponseEntity<?> uploadSize(Exception e) {
+    return error(HttpStatus.PAYLOAD_TOO_LARGE, "UPLOAD_TOO_LARGE", "Upload a project ZIP no larger than 20 MB.");
+  }
+  @ExceptionHandler(org.springframework.web.multipart.support.MissingServletRequestPartException.class)
+  ResponseEntity<?> uploadMissing(Exception e) {
+    return error(HttpStatus.BAD_REQUEST, "FILE_REQUIRED", "Choose a ZIP file using the file upload field.");
+  }
   @ExceptionHandler(Exception.class)
   ResponseEntity<?> unexpected(Exception e) {
     return error(
