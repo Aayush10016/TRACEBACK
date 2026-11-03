@@ -25,3 +25,7 @@ The live product was inspected at 1366×900 and 390×844. All five screens, save
 ## Design reference and evidence
 
 The initial editable Figma direction remains at https://www.figma.com/design/K7qGxbod6fHYBYC8OrHovF. It represents the original visual direction, not the latest refined implementation or a completed component library. Current implementation evidence: `minimal-ui-overview.jpg` and `ui-refinement-results.json`. Details and actual test outcomes are in REPORT.md and TESTING.md.
+
+## Responsive repair — 2026-11-03
+
+Bounded timeline always scrolls; its footer never overlaps rows. Inspector stretches to column width. Phones show all five navigation entries and verification checks as labeled cards. History retains a keyboard-focusable horizontal scroll region and a phone scroll cue. Headers and identifiers wrap; offline state does not imply missing Meta credentials.

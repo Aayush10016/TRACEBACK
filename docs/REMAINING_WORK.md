@@ -26,3 +26,7 @@ An early QA run created before the retry-metadata correction remains immutable i
 ## Superseding NVIDIA status — 2026-10-30
 
 The P0 real-AI demonstration above has now been completed using NVIDIA-hosted Meta Muse Glimmer: authenticated analysis, five valid evidence references, live evidence-link navigation and deterministic verification passed. Direct Meta API access is still unavailable/unverified, but is not required for the currently configured NVIDIA route. The P1 provider transport, accessibility and deployment improvements still apply. See the current update at the top of REPORT.md for actual attempts and results.
+
+## Superseding release status — 2026-11-03
+
+Combined frontend/backend deployment JAR, NVIDIA-only production setup, shared password gate and cross-origin write protection are implemented and tested. Timeline/mobile defects and recovery flows fixed. Public hosting and final HTTPS/host checks still remain. Docker engine is unavailable; image not built. The shared gate is not per-user auth or comprehensive quota control. Formal accessibility, broad browser/load tests and provider HTTP-server transport suites remain future work.

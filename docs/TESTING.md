@@ -68,3 +68,7 @@ Real integration testing: three explicit bounded generation attempts (retired Ll
 `npm run test`: 6 passed; `npm run lint`: passed; `npm run build`: passed. The added regression test checks that Overview refreshes persisted counts after navigating away and back. An initially invalid Testing Library selector option was caught by TypeScript, corrected, and all commands rerun successfully. Backend code was unchanged; its latest 32-test run remains the earlier verified result, not a newly executed suite for this UI pass.
 
 Browser QA: all five screens; 1366×900 laptop and 390×844 phone; saved NVIDIA Event 7 link still selected the actual order event; event details expanded; a new normal-order simulation created one order and its live verification passed. Positioned table scrolling fixed mobile page overflow caused by an accessible hidden label. Safe results: `ui-refinement-results.json`; image: `minimal-ui-overview.jpg`. No new model calls were made. App left running.
+
+## Final release QA — 2026-11-03
+
+37 backend tests and 8 frontend tests passed; lint and production build passed. Production-profile smoke confirmed protected bundled website/assets, NVIDIA configuration, simulation/verification, cross-origin rejection and abrupt-restart persistence after enabling synchronous H2 writes. See REPORT.md, release-smoke-results.json and WEBSITE_AUDIT.md. No paid model requests in this pass. Docker image remains untested because its engine is stopped.

@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-03",
+  "rootAuthentication": 401,
+  "bundledIndex": 200,
+  "bundledJs": 200,
+  "noMetaKeyText": true,
+  "provider": "nvidia",
+  "verification": "PASSED",
+  "beforeOrders": 2,
+  "afterOrders": 1,
+  "crossOriginChange": 403,
+  "abruptRestartPersistence": true,
+  "savedVerification": "PASSED",
+  "runId": "bc2df7f2-3f13-4bcc-b765-9db4878931e2",
+  "modelCalls": 0,
+  "dockerTested": false
+}

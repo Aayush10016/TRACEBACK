@@ -1,3 +1,26 @@
+# Website repair and release — 2026-11-03
+
+Reviewed the five application screens against the user's reported timeline overlap and stale Meta-key setup. Fixed the underlying bounded-timeline overflow, full-width inspector layout, mobile navigation, wrapped headers/identifiers, clipped mobile verification results and backend-recovery/deep-link Retry behavior. Old success notices are cleared when loading another run. Timeline and history scroll regions are keyboard-focusable; the skip link now focuses main content without changing the route. Event descriptions/metadata use more readable type and colors.
+
+The active setup and production profile use NVIDIA-hosted Meta Muse Glimmer only. No Meta key is needed. Configured users no longer see key setup instructions. Offline status never falls back to Meta configuration. Status distinguishes saved real analysis from the current server's configured credentials. Legacy direct Meta code and historical results remain preserved; the production route is explicitly NVIDIA.
+
+## Actual validation
+
+- Final release build: **37 backend tests passed**, no failures/errors/skips; **8 frontend interaction tests passed**; lint and TypeScript/Vite build passed. Added five access-protection tests and two recovery regressions. Final log: ignored `.tools/release-validation.log`.
+- Real production-profile smoke: bundled React index and JS served by Java, unauthenticated root 401, authorized access succeeds, NVIDIA status, duplicate simulation and deterministic verification 2→1 orders, foreign-origin POST 403, saved run and verification reopen after an abrupt restart. Safe result: `docs/release-smoke-results.json`. A first abrupt-restart check exposed delayed H2 flushing; production now uses `WRITE_DELAY=0`, and the repeated test passed.
+- Responsive checks: all five screens at 320, 768, 1024 and 1366px; visually inspected all five at 390px and desktop. No page-wide overflow at these sizes. Timeline footer remains outside the scrolling event list. Saved real NVIDIA Event 7 scrolls into view and selects the correct second order; metadata expands without widening the phone page. History no-match/clear, modal Escape/focus return, replay expansion and new simulation were exercised.
+- New phone UI run `292e021e-dae3-4176-a56d-e86915d02a07`: timeout with idempotency, 8 events, 1 order, zero duplicates, deterministic verification PASSED. No new model generation requests were made. Previously authenticated NVIDIA evidence remains stored.
+- The combined Java release is the deployment artifact; React is embedded by Maven's release profile. Added a multistage Dockerfile, private-context exclusions, production profile, password-protected demo gate and deployment instructions. The gate is shared demo access, not a multi-user account system.
+- Docker engine checked and unavailable, so container image build/start remains untested. No public hosting, Git push, provider account creation or spending was performed. Public HTTPS/host-specific networking must still be checked at deployment. Formal screen-reader/accessibility compliance, broad browser/device coverage and production-scale load testing are not claimed.
+
+## Handoff
+
+Project and Git history remain at `D:\TRACEBACK`. Local final website can be served directly at http://127.0.0.1:8080/ from `backend/target/traceback-1.0.0.jar`; Vite development preview remains available at port 5173. `docs/DEPLOYMENT.md` describes deploying the combined service with a persistent disk, HTTPS and private environment variables. Never publish the existing `.env` or copy a running H2 database file. Fresh deployment storage starts empty and does not contain the local saved NVIDIA analysis automatically.
+
+Earlier reports below are historical and superseded where this update applies.
+
+---
+
 # Latest UI refinement — 2026-10-30
 
 Applied a more minimal graphite interface across all five screens. Reduced decorative gradients/cards, removed the sidebar promotional panel/version/fake avatar, simplified page labels, and introduced restrained off-white actions, neutral navigation, quieter status indicators and larger, more consistent text. The overview now prioritizes its action, real metrics and recent runs.

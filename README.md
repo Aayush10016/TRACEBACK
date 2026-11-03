@@ -47,11 +47,11 @@ Set-Location D:\TRACEBACK\backend
 
 1. On Overview, choose **Start a simulation** → **Duplicate order** → **Run simulation**.
 2. Inspect the nine stored events: payment succeeds, the first order commits, the response times out, and an unsafe retry creates another order. Select events and expand metadata.
-3. With Meta configured, explicitly choose **Investigate with Meta**. The backend validates JSON and event ownership before saving. Click an evidence reference to select its stored event. Without credentials, the UI explains the configuration requirement; there is no fabricated analysis.
+3. With NVIDIA configured, explicitly choose **Investigate trace**. The backend validates JSON and event ownership before saving. Click an evidence reference to select its stored event. Without credentials, the UI explains the configuration requirement; there is no fabricated analysis.
 4. Choose **Run verification**. The original remains two orders / one logical order / one duplicate. A separate replay uses an idempotency lookup and produces one order / one logical order / zero duplicates. Inspect all five checks and the replay trace.
 5. Open **Run history**, reopen the run, or refresh the browser. The verification persists.
 6. Run **Normal order** (one order), **Payment failure** (zero orders), and **Timeout with idempotency** (one order). Their verification checks confirm scenario invariants; a payment failure is expected behavior, not a successful payment.
-7. Open **System status** to inspect backend, database and Meta readiness.
+7. Open **System status** to inspect backend, database and NVIDIA readiness.
 
 CLI smoke check (creates four additional real runs):
 
@@ -59,15 +59,11 @@ CLI smoke check (creates four additional real runs):
 .\scripts\smoke-test.ps1
 ```
 
-## Meta configuration and switching keys
+## NVIDIA configuration
 
-Copy `.env.example` to `.env`, edit locally, and set `META_API_KEY` to your authorized key. Restart using the backend script, which imports that file without printing values. Alternatively set process environment variables before starting Java. Spring Boot launched directly does **not** automatically import `.env`.
+Copy `.env.example` to `.env` only if `.env` does not exist. Set `NVIDIA_API_KEY` there and keep `AI_PROVIDER=nvidia`, `NVIDIA_MODEL=meta/muse-glimmer-30b`. Restart the backend through the script, which loads `.env` without printing values. Never overwrite an existing saved key. Direct Java launches require environment variables; Spring does not import `.env` automatically.
 
-`META_PROVIDER=meta`, `META_MODEL=muse-spark-1.3` and `META_ENDPOINT=https://api.meta.ai/v1/chat/completions` match the official documentation checked on 2026-10-29. The endpoint is intentionally restricted to that verified HTTPS destination. Changing to another provider requires a new `InvestigationProvider` implementation; unsupported configuration is reported honestly.
-
-Use **one explicit investigation** as the first controlled authenticated check. A configured key is not proof of model access. No real key was supplied or model call performed in this build session. Official contract sources are in `docs/API.md`.
-
-To switch accounts, replace the backend environment key or Git-ignored `.env` value and restart. Do not put keys in `VITE_*`, React source, screenshots, command-line arguments, Git, or reports. The app never switches accounts automatically or combines credits. Existing saved analyses are reused and retain their recorded model; a new simulation starts a new investigation. Rate limits or credit exhaustion surface as provider errors without automatic retries.
+This project uses NVIDIA-hosted Meta Muse Glimmer. No direct Meta key is needed. A real authenticated analysis and linked evidence were tested previously; quota and future availability depend on NVIDIA. Keys stay on the server, outside Git and frontend assets.
 
 ## PostgreSQL
 
@@ -88,9 +84,9 @@ An isolated PostgreSQL 17 QA cluster was used on port 55433 during verification;
 - Backend unavailable: inspect its terminal, check port 8080, and restart through the provided script. Do not start two backends against one H2 file.
 - `Unable to establish loopback connection` / `Invalid argument: connect`: use the startup script's short `.tools/tmp` path. Changing the selector provider alone did not fix this environment.
 - Maven cannot delete the JAR: stop the running backend and repeat `run-tests.ps1`.
-- Frontend cannot proxy: start the backend first; use port 5173 and `/api` through Vite. Production hosting must provide a same-origin `/api` reverse proxy; static assets alone do not run Java.
+- Frontend cannot proxy: start the backend first; use port 5173 and `/api` through Vite. For deployment, use the combined release JAR or Dockerfile described in `docs/DEPLOYMENT.md`; static assets alone do not run Java.
 - PostgreSQL authentication failure: supply the correct local credentials; the app does not discover or reset passwords.
-- Meta not configured: import `.env` through the startup script and restart. A present key still requires an explicit authenticated check.
+- NVIDIA not configured: import `.env` through the startup script and restart. A present key still requires an explicit authenticated check.
 - Invalid analysis or evidence: rejected analysis is not saved. Correct provider/model configuration before retrying. No automatic model calls occur.
 - No data: create a simulation. Metrics are computed from the database; no fixtures are seeded into production storage.
 
@@ -110,7 +106,11 @@ Restart `scripts/start-backend.ps1` after saving. This uses NVIDIA to host a Met
 
 The implementation follows [NVIDIA's official Muse Glimmer API reference](https://docs.api.nvidia.com/nim/reference/meta-muse-glimmer-30b-infer): fixed `POST https://integrate.api.nvidia.com/v1/chat/completions`, bearer authentication, system/user messages, `max_tokens: 2000`, `temperature: 0.95`, `stream: false`. JSON is requested in the system prompt and validated by Java; undocumented JSON output parameters are not sent to this endpoint. No claim is made that account credits or model access are available until a real request succeeds. Pending HTTP 202 is reported explicitly without polling or automatic retries.
 
-To return to direct Meta, set `AI_PROVIDER=meta` and configure `META_API_KEY`. Keys are separate and never automatically switched. Never put either key into a `VITE_*` variable, frontend source, Git or chat.
+The supported demo setup uses NVIDIA only. Legacy direct-Meta code is retained for existing history and tests; it is not used by the production profile.
 
 
 The live catalog check on 2026-10-30 supersedes the initial Llama 3.3 selection: that older model returned HTTP 410 Gone. The selected model is meta/muse-glimmer-30b, verified against NVIDIA's live /v1/models catalog and its official Muse Glimmer reference. The first Muse request timed out at 30 seconds; the client now allows a bounded 90-second read window (5-second connect), and the frontend allows 100 seconds for investigation POSTs. No automatic model fallback or retry occurs.
+
+## Deploy the combined application
+
+See [Deployment guide](docs/DEPLOYMENT.md). `scripts/build-release.ps1` builds the frontend and embeds it in the Java JAR, runs all checks, and produces one deployable service. The production profile requires shared demo credentials and keeps NVIDIA credentials server-side. Do not deploy the Vite development server.

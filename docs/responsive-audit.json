@@ -1,0 +1,162 @@
+[
+  {
+    "document": 310,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Overview",
+    "width": 320
+  },
+  {
+    "document": 310,
+    "footerSeparated": true,
+    "overflow": false,
+    "timelineOverflow": "auto",
+    "view": "Investigation workspace",
+    "width": 320
+  },
+  {
+    "document": 310,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Verification",
+    "width": 320
+  },
+  {
+    "document": 310,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Run history",
+    "width": 320
+  },
+  {
+    "document": 310,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "System status",
+    "width": 320
+  },
+  {
+    "document": 758,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Overview",
+    "width": 768
+  },
+  {
+    "document": 758,
+    "footerSeparated": true,
+    "overflow": false,
+    "timelineOverflow": "auto",
+    "view": "Investigation workspace",
+    "width": 768
+  },
+  {
+    "document": 758,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Verification",
+    "width": 768
+  },
+  {
+    "document": 758,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Run history",
+    "width": 768
+  },
+  {
+    "document": 758,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "System status",
+    "width": 768
+  },
+  {
+    "document": 1014,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Overview",
+    "width": 1024
+  },
+  {
+    "document": 1014,
+    "footerSeparated": true,
+    "overflow": false,
+    "timelineOverflow": "auto",
+    "view": "Investigation workspace",
+    "width": 1024
+  },
+  {
+    "document": 1014,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Verification",
+    "width": 1024
+  },
+  {
+    "document": 1014,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Run history",
+    "width": 1024
+  },
+  {
+    "document": 1014,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "System status",
+    "width": 1024
+  },
+  {
+    "document": 1356,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Overview",
+    "width": 1366
+  },
+  {
+    "document": 1356,
+    "footerSeparated": true,
+    "overflow": false,
+    "timelineOverflow": "auto",
+    "view": "Investigation workspace",
+    "width": 1366
+  },
+  {
+    "document": 1356,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Verification",
+    "width": 1366
+  },
+  {
+    "document": 1356,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "Run history",
+    "width": 1366
+  },
+  {
+    "document": 1366,
+    "footerSeparated": null,
+    "overflow": false,
+    "timelineOverflow": null,
+    "view": "System status",
+    "width": 1366
+  }
+]

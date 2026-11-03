@@ -10,12 +10,12 @@ import App from "./App";
 const health = {
   backend: "UP",
   database: "UP",
-  meta: {
+  ai: {
     configured: false,
     status: "NOT_CONFIGURED",
-    message: "Set META_API_KEY",
-    model: "muse-spark-1.3",
-    provider: "meta",
+    message: "Set NVIDIA_API_KEY",
+    model: "meta/muse-glimmer-30b",
+    provider: "nvidia",
   },
 };
 const run = {
@@ -116,8 +116,8 @@ describe("workspace interactions", () => {
             status: 200,
             json: async () => ({
               ...health,
-              meta: {
-                ...health.meta,
+              ai: {
+                ...health.ai,
                 provider: "nvidia",
                 model: "meta/muse-glimmer-30b",
                 configured: true,
@@ -131,8 +131,38 @@ describe("workspace interactions", () => {
     render(<App />);
     await screen.findByText("NVIDIA configured");
     fireEvent.click(screen.getByRole("button", { name: "System status" }));
-    expect(screen.getByText("NVIDIA_API_KEY")).toBeInTheDocument();
+    expect(screen.queryByText("NVIDIA_API_KEY")).not.toBeInTheDocument();
+    expect(screen.queryByText("META_API_KEY")).not.toBeInTheDocument();
     expect(screen.getByText("meta/muse-glimmer-30b")).toBeInTheDocument();
+  });
+  it("clears the connection error after a successful refresh", async () => {
+    const originalFetch = fetch;
+    const flaky = vi.fn().mockRejectedValue(new Error("offline"));
+    vi.stubGlobal("fetch", flaky);
+    render(<App />);
+    await screen.findByRole("alert");
+    flaky.mockImplementation(originalFetch);
+    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+    await waitFor(() =>
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument(),
+    );
+    expect(
+      screen.getByRole("button", { name: /Start a simulation/ }),
+    ).toBeEnabled();
+  });
+  it("retries a deep-linked run after the backend recovers", async () => {
+    location.hash = "view=investigation&run=" + run.id;
+    const originalFetch = fetch;
+    const flaky = vi.fn().mockRejectedValue(new Error("offline"));
+    vi.stubGlobal("fetch", flaky);
+    render(<App />);
+    await screen.findByRole("alert");
+    flaky.mockImplementation(originalFetch);
+    fireEvent.click(screen.getByRole("button", { name: "Retry" }));
+    await screen.findByRole("heading", { name: "Execution timeline" });
+    expect(
+      screen.getByRole("region", { name: "Execution events" }),
+    ).toHaveAttribute("tabindex", "0");
   });
   it("shows honest empty metrics", async () => {
     render(<App />);
@@ -140,7 +170,7 @@ describe("workspace interactions", () => {
     expect(
       screen.getByText("Run verification to establish a baseline"),
     ).toBeInTheDocument();
-    expect(screen.getByText("Meta not configured")).toBeInTheDocument();
+    expect(screen.getByText("NVIDIA not configured")).toBeInTheDocument();
   });
   it("launches a simulation and inspects stored evidence", async () => {
     render(<App />);
@@ -167,7 +197,7 @@ describe("workspace interactions", () => {
   it("opens system status and keeps credentials on the backend", async () => {
     render(<App />);
     fireEvent.click(screen.getByRole("button", { name: "System status" }));
-    await screen.findByText("Ready when you configure it.");
+    await screen.findByText("NVIDIA setup required");
     expect(screen.getByText("Backend environment only")).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
   });
@@ -178,5 +208,9 @@ describe("workspace interactions", () => {
     expect(
       screen.getByRole("button", { name: /Start a simulation/ }),
     ).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: "System status" }));
+    await screen.findByText("Backend connection unavailable");
+    expect(screen.queryByText("META_API_KEY")).not.toBeInTheDocument();
+    expect(screen.queryByText("NVIDIA_API_KEY")).not.toBeInTheDocument();
   });
 });

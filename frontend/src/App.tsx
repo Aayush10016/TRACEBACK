@@ -116,14 +116,7 @@ export default function App() {
     [stats, setStats] = useState<Stats | null>(null),
     [history, setHistory] = useState<Page | null>(null);
   const ai = health?.ai ?? health?.meta;
-  const providerLabel =
-    ai?.provider === "nvidia"
-      ? "NVIDIA"
-      : ai?.provider === "meta"
-        ? "Meta"
-        : "AI";
-  const keyVariable =
-    ai?.provider === "nvidia" ? "NVIDIA_API_KEY" : "META_API_KEY";
+  const providerLabel = "NVIDIA";
   const [page, setPage] = useState(0),
     [query, setQuery] = useState(""),
     [scenario, setScenario] = useState<Scenario>("DUPLICATE_ORDER"),
@@ -149,6 +142,13 @@ export default function App() {
       setError(
         "Could not refresh all workspace data. Check the backend and retry.",
       );
+    else
+      setError((current) =>
+        current ===
+        "Could not refresh all workspace data. Check the backend and retry."
+          ? ""
+          : current,
+      );
   }, [page]);
   const navigate = useCallback((next: View, id?: string) => {
     setView(next);
@@ -162,6 +162,7 @@ export default function App() {
       const token = ++generation.current;
       setBusy("Loading run");
       setError("");
+      setNotice("");
       try {
         const [r, i, v] = await Promise.all([
           request<Run>(`/simulations/${id}`),
@@ -339,13 +340,19 @@ export default function App() {
         </button>
       ) : (
         <span className="environment">
-          <Radio size={13} /> Local development
+          <Radio size={13} /> Controlled simulation
         </span>
       )}
     </div>
   );
   const table = (compact = false) => (
-    <div className="table-wrap">
+    <div
+      className="table-wrap"
+      role="region"
+      aria-label="Simulation runs; scroll horizontally for all columns"
+      tabIndex={0}
+    >
+      <p className="table-hint">Scroll sideways to see all columns</p>
       <table>
         <thead>
           <tr>
@@ -398,7 +405,14 @@ export default function App() {
   );
   return (
     <div className="app">
-      <a className="skip-link" href="#main">
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById("main")?.focus();
+        }}
+      >
         Skip to content
       </a>
       <aside className="sidebar">
@@ -413,8 +427,8 @@ export default function App() {
           TRACEBACK
         </a>
         <div className="workspace-label">
-          <span className="workspace-dot" /> Local workspace{" "}
-          <span className="workspace-mode">DEV</span>
+          <span className="workspace-dot" /> Demo workspace{" "}
+          <span className="workspace-mode">DEMO</span>
         </div>
         <div className="nav-caption">WORKSPACE</div>
         <nav aria-label="Main navigation">
@@ -455,13 +469,15 @@ export default function App() {
                 ? `${investigation.provider.toUpperCase()} response validated`
                 : ai?.configured
                   ? `${providerLabel} configured`
-                  : `${providerLabel} not configured`}
+                  : health
+                    ? `${providerLabel} not configured`
+                    : "Backend unavailable"}
             </span>
             <span className="topbar-divider" />
-            <span className="local-label">Local only</span>
+            <span className="local-label">Demo workspace</span>
           </div>
         </header>
-        <main id="main">
+        <main id="main" tabIndex={-1}>
           {header}
           {error && (
             <div className="alert error" role="alert">
@@ -471,6 +487,10 @@ export default function App() {
                 onClick={() => {
                   setError("");
                   void refresh();
+                  const id = new URLSearchParams(location.hash.slice(1)).get(
+                    "run",
+                  );
+                  if (id) void loadRun(id, view);
                 }}
               >
                 Retry
@@ -618,7 +638,7 @@ export default function App() {
               <div className="overview-bottom">
                 <div>
                   <Database size={16} />
-                  <span>Every run is persisted locally.</span>
+                  <span>Every run is persisted on the backend.</span>
                 </div>
                 <div>
                   <ShieldCheck size={16} />
@@ -709,7 +729,12 @@ export default function App() {
                   </div>
                   <span className="count mono">{run.events.length} EVENTS</span>
                 </div>
-                <div className="timeline">
+                <div
+                  className="timeline"
+                  role="region"
+                  aria-label="Execution events"
+                  tabIndex={0}
+                >
                   {run.events.map((e) => (
                     <button
                       id={`event-${e.id}`}
@@ -1042,7 +1067,7 @@ export default function App() {
                       <Badge value={verification.status} />
                     </div>
                     <div className="table-wrap">
-                      <table>
+                      <table className="verification-checks">
                         <thead>
                           <tr>
                             <th>CHECK</th>
@@ -1062,9 +1087,13 @@ export default function App() {
                                   </p>
                                 )}
                               </td>
-                              <td className="mono">{c.expected}</td>
-                              <td className="mono">{c.actual}</td>
-                              <td>
+                              <td className="mono" data-label="Expected">
+                                {c.expected}
+                              </td>
+                              <td className="mono" data-label="Actual">
+                                {c.actual}
+                              </td>
+                              <td data-label="Result">
                                 <span
                                   className={c.passed ? "check-pass" : "coral"}
                                 >
@@ -1202,7 +1231,7 @@ export default function App() {
                   </span>
                   <div>
                     <h3>Spring Boot backend</h3>
-                    <p>Local REST service · 127.0.0.1:8080</p>
+                    <p>Same-origin REST API</p>
                   </div>
                   <Badge value={health?.backend ?? "DOWN"} />
                 </div>
@@ -1218,9 +1247,9 @@ export default function App() {
                 </div>
                 <div className="panel-body">
                   <p className="muted">
-                    The local profile uses a file database. The PostgreSQL
-                    profile is available for deployment. Health does not imply
-                    every database profile has been tested.
+                    Simulation runs, traces and results are stored on the
+                    backend. This status reflects the currently connected
+                    database.
                   </p>
                 </div>
               </section>
@@ -1230,13 +1259,23 @@ export default function App() {
                     <Sparkles size={16} />
                     {providerLabel} model API
                   </h2>
-                  <Badge value={ai?.status ?? "NOT_VERIFIED"} />
+                  <Badge
+                    value={
+                      ai?.configured
+                        ? "CONFIGURED"
+                        : (ai?.status ?? "NOT_VERIFIED")
+                    }
+                  />
                 </div>
                 <div className="panel-body">
                   <h3>
-                    {ai?.configured
-                      ? "Configured; authenticated access requires an investigation."
-                      : "Ready when you configure it."}
+                    {!health
+                      ? "Backend connection unavailable"
+                      : investigation?.provider === "nvidia" && ai?.configured
+                        ? "Real analysis saved and validated"
+                        : ai?.configured
+                          ? "Ready for an investigation"
+                          : "NVIDIA setup required"}
                   </h3>
                   <p>
                     {ai?.message ??
@@ -1244,7 +1283,7 @@ export default function App() {
                   </p>
                   <dl>
                     <dt>Provider</dt>
-                    <dd>{ai?.provider ?? "Unknown"}</dd>
+                    <dd>{ai?.provider ?? "NVIDIA · awaiting backend"}</dd>
                     <dt>Model</dt>
                     <dd>{ai?.model ?? "Unknown"}</dd>
                     <dt>Selected run analysis</dt>
@@ -1252,18 +1291,22 @@ export default function App() {
                       {investigation ? "Validated and stored" : "Not run"}
                     </dd>
                   </dl>
-                  <div className="config-note">
-                    <Terminal size={16} />
-                    <div>
-                      <strong>Backend environment only</strong>
-                      <p>
-                        Set <code>{keyVariable}</code>, restart the backend,
-                        then explicitly run an investigation. Never place a key
-                        in frontend settings.
-                      </p>
+                  {health && !ai?.configured && (
+                    <div className="config-note">
+                      <Terminal size={16} />
+                      <div>
+                        <strong>Backend environment only</strong>
+                        <p>
+                          Set <code>NVIDIA_API_KEY</code> on the server, restart
+                          it, then explicitly run an investigation. Never place
+                          a key in frontend settings.
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <p className="small muted">
+                    {ai?.configured &&
+                      "NVIDIA is configured on the server. Your key stays private. "}
                     One bounded call per investigation. Saved analysis is
                     reused. Automated tests never spend model credits.
                   </p>
@@ -1278,9 +1321,7 @@ export default function App() {
             </span>
             <span>
               <i className={health ? "online" : "offline"} />
-              {health
-                ? "Connected to local backend"
-                : "Backend connection required"}
+              {health ? "Backend connected" : "Backend connection required"}
             </span>
           </footer>
         </main>
