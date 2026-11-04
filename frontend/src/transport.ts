@@ -6,7 +6,7 @@ export function setDemoCredentials(username: string, password: string) {
 export async function apiFetch(url: string, init: RequestInit = {}) {
   const headers = new Headers(init.headers);
   if (authorization) headers.set("Authorization", authorization);
-  const response = await fetch(url, { ...init, headers, cache: "no-store" });
+  const response = await fetch(url, { ...init, headers, credentials: "omit", cache: "no-store" });
   if (response.status === 401) {
     authorization = "";
     window.dispatchEvent(new Event("traceback-sign-in"));
