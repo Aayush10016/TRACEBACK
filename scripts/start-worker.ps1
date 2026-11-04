@@ -7,8 +7,8 @@ docker info --format '{{.ServerVersion}}' | Out-Null
 if($LASTEXITCODE -ne 0) { throw 'Start Docker Desktop first.' }
 docker image inspect traceback-java-runner:17 --format '{{.Id}}' | Out-Null
 if($LASTEXITCODE -ne 0) { throw 'Run scripts/build-runner.ps1 first.' }
-$jar=Join-Path $ProjectRoot 'backend/target/traceback-1.0.0.jar'
-if(!(Test-Path -LiteralPath $jar)){throw 'Build the release first.'}
+$jar=Join-Path $ProjectRoot '.tools/worker-release/traceback-1.0.0.jar'
+if(!(Test-Path -LiteralPath $jar)){throw 'Run scripts/build-worker-release.ps1 first.'}
 $names=@('DEMO_USERNAME','DEMO_PASSWORD','NVIDIA_API_KEY','META_API_KEY','PROJECT_WORKER_URL','DEMO_PUBLIC_ORIGIN','PROJECT_STORAGE','SPRING_PROFILES_ACTIVE')
 $previous=@{}
 foreach($name in $names){$previous[$name]=[Environment]::GetEnvironmentVariable($name,'Process')}

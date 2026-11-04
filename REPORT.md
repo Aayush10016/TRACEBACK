@@ -1,3 +1,12 @@
+# Hosted demo preparation
+
+- Backend tests: 53 passed. Includes authenticated project forwarding, multipart bytes, origin restrictions, offline worker responses and rejected redirects.
+- Frontend tests: 14 passed. Lint and the production frontend build passed.
+- Render Blueprint and Vercel rewrite generator added. The hosted route to the Windows worker is not verified against live Render or Vercel until both deployments are configured and a real ZIP test finishes through the production URL.
+- NVIDIA integration and isolated Maven ZIP execution were verified locally in the previous release. This hosting pass did not claim a new live NVIDIA run.
+
+---
+
 # Real project uploads and Docker verification — 2026-11-03
 
 Added a new default **Project tests** screen for uploaded Java 17 Maven/Spring ZIPs. It inspects and inventories the ZIP, chooses an unambiguous Maven root, and explicitly runs the project's existing Maven tests in isolated Docker containers. The original order simulator is retained as a separate **Simulation lab**, with its existing Git/data history preserved. Project tests do not call NVIDIA or send source/test output to a model.
