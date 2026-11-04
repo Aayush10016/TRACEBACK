@@ -3,6 +3,7 @@
 - Backend tests: 53 passed. Includes authenticated project forwarding, multipart bytes, origin restrictions, offline worker responses and rejected redirects.
 - Frontend tests: 14 passed. Lint and the production frontend build passed.
 - Render Blueprint and Vercel rewrite generator added. The hosted route to the Windows worker is not verified against live Render or Vercel until both deployments are configured and a real ZIP test finishes through the production URL.
+- Windows worker verified on loopback with Docker available. An authenticated upload of the synthetic passing Maven fixture finished PASSED (1 test, 0 failures or errors). The authorized temporary HTTPS tunnel returned 401 for anonymous project requests and served authenticated job status. This verifies the PC and tunnel legs, not the live Render/Vercel deployment.
 - NVIDIA integration and isolated Maven ZIP execution were verified locally in the previous release. This hosting pass did not claim a new live NVIDIA run.
 
 ---
