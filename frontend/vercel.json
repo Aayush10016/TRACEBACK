@@ -10,6 +10,10 @@
       "destination": "https://traceback-lab.onrender.com/api/dashboard"
     },
     {
+      "source": "/api/simulations",
+      "destination": "https://traceback-lab.onrender.com/api/simulations"
+    },
+    {
       "source": "/api/simulations/:path*",
       "destination": "https://traceback-lab.onrender.com/api/simulations/:path*"
     },

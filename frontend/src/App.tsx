@@ -498,7 +498,7 @@ export default function App() {
         </header>
         <main id="main" tabIndex={-1}>
           {header}
-          {error && (
+          {error && !(view === "projects" && import.meta.env.MODE === "hosted") && (
             <div className="alert error" role="alert">
               <TriangleAlert size={17} />
               <span>{error}</span>
