@@ -1,0 +1,11 @@
+{
+  "buildCommand": "npm run build",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://traceback-lab.onrender.com/api/:path*"
+    }
+  ],
+  "outputDirectory": "dist",
+  "framework": "vite"
+}
