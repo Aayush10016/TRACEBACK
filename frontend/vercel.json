@@ -2,10 +2,36 @@
   "buildCommand": "npm run build -- --mode hosted",
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://traceback-lab.onrender.com/api/:path*"
+      "source": "/api/health",
+      "destination": "https://traceback-lab.onrender.com/api/health"
+    },
+    {
+      "source": "/api/dashboard",
+      "destination": "https://traceback-lab.onrender.com/api/dashboard"
+    },
+    {
+      "source": "/api/simulations/:path*",
+      "destination": "https://traceback-lab.onrender.com/api/simulations/:path*"
+    },
+    {
+      "source": "/api/investigations/:path*",
+      "destination": "https://traceback-lab.onrender.com/api/investigations/:path*"
+    },
+    {
+      "source": "/api/verification/:path*",
+      "destination": "https://traceback-lab.onrender.com/api/verification/:path*"
+    },
+    {
+      "source": "/api/projects/:path*",
+      "destination": "https://traceback-lab.onrender.com/api/projects/:path*"
     }
   ],
   "outputDirectory": "dist",
-  "framework": "vite"
+  "framework": "vite",
+  "functions": {
+    "api/zip-test.mjs": {
+      "maxDuration": 250,
+      "includeFiles": "sandbox/maven-runner.py"
+    }
+  }
 }

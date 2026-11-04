@@ -1,3 +1,4 @@
+import HostedProjectWorkspace from "./HostedProjectWorkspace";
 import { apiFetch } from "./transport";
 import { useEffect, useState } from "react";
 import {
@@ -34,15 +35,7 @@ interface Runner {
   message: string;
 }
 export default function ProjectWorkspace() {
-  if (import.meta.env.MODE === "hosted") {
-    return (
-      <section className="panel">
-        <h2>Maven test runner</h2>
-        <p>The hosted workspace shows a completed sample. Run TRACEBACK locally with Docker to test your own Java 17 Maven ZIPs.</p>
-        <p><strong>Sample result:</strong> 1 test passed, 0 failures, 0 errors, 0 skipped.</p>
-      </section>
-    );
-  }
+  if (import.meta.env.MODE === "hosted") return <HostedProjectWorkspace />;
   return <LocalProjectWorkspace />;
 }
 

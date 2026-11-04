@@ -10,6 +10,7 @@
     "lint": "eslint src"
   },
   "dependencies": {
+    "@vercel/sandbox": "3.9.1",
     "lucide-react": "^0.468.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
@@ -28,5 +29,10 @@
     "typescript-eslint": "^8.40.0",
     "vite": "^7.1.2",
     "vitest": "^3.2.4"
+  },
+  "overrides": {
+    "@vercel/cli-config": {
+      "zod": "4.6.7"
+    }
   }
 }
