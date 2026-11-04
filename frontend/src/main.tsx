@@ -9,6 +9,6 @@ const showPublicDemo = import.meta.env.MODE === "hosted" &&
   !new URLSearchParams(window.location.search).has("workspace");
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    {showPublicDemo ? <PublicDemo /> : <DemoGate><App /></DemoGate>}
+    {showPublicDemo ? <PublicDemo /> : import.meta.env.MODE === "hosted" ? <App /> : <DemoGate><App /></DemoGate>}
   </React.StrictMode>,
 );

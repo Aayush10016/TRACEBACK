@@ -34,6 +34,19 @@ interface Runner {
   message: string;
 }
 export default function ProjectWorkspace() {
+  if (import.meta.env.MODE === "hosted") {
+    return (
+      <section className="panel">
+        <h2>Maven test runner</h2>
+        <p>The hosted workspace shows a completed sample. Run TRACEBACK locally with Docker to test your own Java 17 Maven ZIPs.</p>
+        <p><strong>Sample result:</strong> 1 test passed, 0 failures, 0 errors, 0 skipped.</p>
+      </section>
+    );
+  }
+  return <LocalProjectWorkspace />;
+}
+
+function LocalProjectWorkspace() {
   const [jobs, setJobs] = useState<Job[]>([]),
     [job, setJob] = useState<Job | null>(null),
     [runner, setRunner] = useState<Runner | null>(null);

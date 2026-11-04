@@ -27,7 +27,7 @@ export default function PublicDemo() {
     <main className="public-demo">
       <header>
         <strong><GitBranch size={19} aria-hidden="true" /> TRACEBACK</strong>
-        <a href="/?workspace=1">Open test workspace <ArrowRight size={16} aria-hidden="true" /></a>
+        <a href="/?workspace=1">Open workspace <ArrowRight size={16} aria-hidden="true" /></a>
       </header>
       <p className="public-demo-label">PUBLIC DEMO · SAVED SAMPLE RUN</p>
       <h1>Find the failure.<br />Verify the fix.</h1>
@@ -46,7 +46,7 @@ export default function PublicDemo() {
         {selected === 1 && <p className="public-demo-detail">Saved Meta Muse Glimmer 30B analysis via NVIDIA. Evidence includes the first write, the timeout, and the second write.</p>}
         {selected === 2 && <p className="public-demo-detail"><ShieldCheck size={18} aria-hidden="true" /> Before: 2 orders, 1 duplicate. After: 1 order, 0 duplicates.</p>}
       </section>
-      <p className="public-demo-detail">This walkthrough shows results from a completed sample. The test workspace lets authorized users run new investigations and upload Java 17 Maven ZIPs.</p>
+      <p className="public-demo-detail">This walkthrough shows results from a completed sample. Open the workspace to run a new simulation and verify its replay. Run TRACEBACK locally with Docker to test your own Maven ZIPs.</p>
     </main>
   );
 }

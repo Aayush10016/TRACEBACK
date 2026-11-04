@@ -47,6 +47,40 @@ class DemoAccessFilterTest {
     assertThat(response.getStatus()).isEqualTo(204);
     assertThat(response.getHeader("X-Frame-Options")).isEqualTo("DENY");
   }
+  @Test void publicWorkspaceAllowsSimulationsAndBlocksAccessToThePcWorker() throws Exception {
+    var filter = publicFilter();
+    assertThat(publicRequest(filter, "GET", "/api/dashboard", null).getStatus()).isEqualTo(204);
+    assertThat(publicRequest(filter, "POST", "/api/simulations/run", "https://demo.vercel.app").getStatus()).isEqualTo(204);
+    assertThat(publicRequest(filter, "POST", "/api/simulations/run", "https://other.example").getStatus()).isEqualTo(403);
+    var blocked = publicRequest(filter, "POST", "/api/projects", "https://demo.vercel.app");
+    assertThat(blocked.getStatus()).isEqualTo(403);
+    assertThat(blocked.getHeader("WWW-Authenticate")).isNull();
+    assertThat(publicRequest(filter, "GET", "/api/projects", null).getStatus()).isEqualTo(403);
+  }
+
+  @Test void publicInvestigationBudgetLimitsRepeatedRequests() throws Exception {
+    var filter = publicFilter();
+    String path = "/api/investigations/fd13d542-96e3-4527-b564-696d91496078";
+    assertThat(publicRequest(filter, "POST", path, "https://demo.vercel.app").getStatus()).isEqualTo(204);
+    assertThat(publicRequest(filter, "POST", path, "https://demo.vercel.app").getStatus()).isEqualTo(429);
+  }
+
+  private DemoAccessFilter publicFilter() {
+    var filter = new DemoAccessFilter(true, "judge", PASSWORD);
+    org.springframework.test.util.ReflectionTestUtils.setField(filter, "publicWorkspace", true);
+    org.springframework.test.util.ReflectionTestUtils.setField(filter, "publicOrigin", "https://demo.vercel.app");
+    return filter;
+  }
+
+  private MockHttpServletResponse publicRequest(DemoAccessFilter filter, String method, String path, String origin)
+      throws Exception {
+    var req = new MockHttpServletRequest(method, path);
+    if (origin != null) req.addHeader("Origin", origin);
+    var response = new MockHttpServletResponse();
+    filter.doFilter(req, response, (a, b) -> ((jakarta.servlet.http.HttpServletResponse) b).setStatus(204));
+    return response;
+  }
+
   @Test void productionFailsClosedWithoutStrongCredentials() {
     assertThatThrownBy(() -> new DemoAccessFilter(true, "judge", "short")).isInstanceOf(IllegalStateException.class);
     assertThatThrownBy(() -> new DemoAccessFilter(true, "", PASSWORD)).isInstanceOf(IllegalStateException.class);
