@@ -127,6 +127,7 @@ export default function App() {
   const [busy, setBusy] = useState(""),
     [error, setError] = useState(""),
     [notice, setNotice] = useState("");
+  const [analyzing, setAnalyzing] = useState(false);
   const generation = useRef(0);
   const launchButton = useRef<HTMLButtonElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -262,15 +263,23 @@ export default function App() {
       );
       await refresh();
     });
-  const investigate = () =>
-    run &&
-    action("Investigating trace", async () => {
-      setInvestigation(
-        await request<Investigation>(`/investigations/${run.id}`, "POST"),
-      );
+  const investigate = async () => {
+    if (!run || analyzing) return;
+    const token = generation.current;
+    setAnalyzing(true);
+    setError("");
+    try {
+      const result = await request<Investigation>(`/investigations/${run.id}`, "POST");
+      if (token !== generation.current) return;
+      setInvestigation(result);
       setNotice("AI analysis saved. Evidence references have been validated.");
       await refresh();
-    });
+    } catch (e) {
+      if (token === generation.current) setError((e as Error).message);
+    } finally {
+      setAnalyzing(false);
+    }
+  };
   const verify = () =>
     run &&
     action("Running verification", async () => {
@@ -703,14 +712,23 @@ export default function App() {
                   </div>
                 </div>
                 <div className="run-badges">
-                  <Badge value={run.status} />
+                  <span>Original workflow: <Badge value={run.status} /></span>
                   <span>AI: {investigation ? "analyzed" : "not run"}</span>
                   <span>
-                    Verification:{" "}
+                    Replay checks:{" "}
                     <Badge value={verification?.status ?? "NOT_RUN"} />
                   </span>
                 </div>
               </section>
+              {run.scenario === "DUPLICATE_ORDER" && run.status === "FAILED" && (
+                <p className="muted">
+                  The original simulation intentionally reproduces a duplicate order.
+                  {" "}
+                  {verification?.status === "PASSED"
+                    ? "The protected replay passed its checks and produced zero duplicates."
+                    : "Run verification to check whether the protected replay prevents it."}
+                </p>
+              )}
               <div className="tabs">
                 <button
                   className={view === "investigation" ? "selected" : ""}
@@ -921,11 +939,11 @@ export default function App() {
                       </div>
                       <button
                         className="primary wide"
-                        disabled={!!busy || !ai?.configured}
+                        disabled={!!busy || analyzing || !ai?.configured}
                         onClick={() => void investigate()}
                       >
                         <Sparkles size={15} />
-                        {busy === "Investigating trace"
+                        {analyzing
                           ? "Analyzing trace…"
                           : "Investigate trace"}
                       </button>
@@ -947,7 +965,7 @@ export default function App() {
                     <h3>Put the correction to the test.</h3>
                     <p>
                       Replay with idempotency protection and compare actual
-                      outcomes.
+                      outcomes. Verification can run while the AI analyzes the trace.
                     </p>
                     <button
                       className="secondary"
