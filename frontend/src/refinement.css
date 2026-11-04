@@ -1655,3 +1655,17 @@ pre.project-output {
 .demo-signin input{width:100%;min-width:0;padding:12px;color:#eee;background:#0d1015;border:1px solid #414650;border-radius:8px}
 .demo-signin label{margin-top:8px}
 .demo-signin small{color:#a7adb7;line-height:1.5}
+
+.public-demo { max-width: 900px; margin: auto; padding: 32px 24px 60px; }
+.public-demo header, .public-demo header strong, .public-demo header a, .public-demo-detail { display: flex; align-items: center; gap: 9px; }
+.public-demo header { justify-content: space-between; flex-wrap: wrap; }
+.public-demo header a { color: #b9b8ff; }
+.public-demo-label { margin: 64px 0 8px; color: #b9b8ff; letter-spacing: .12em; font-size: 12px; }
+.public-demo h1 { font-size: clamp(42px, 9vw, 86px); line-height: 1.02; margin: 0 0 20px; }
+.public-demo p { line-height: 1.65; max-width: 65ch; }
+.public-demo nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 12px; }
+.public-demo nav button { border: 1px solid #414159; background: #191923; color: inherit; padding: 10px 14px; border-radius: 8px; cursor: pointer; }
+.public-demo nav button[aria-pressed=true] { border-color: #b9b8ff; color: #dedcff; }
+.public-demo section { border: 1px solid #414159; background: #171720; border-radius: 12px; padding: 20px; }
+.public-demo section h2 { margin-top: 0; }
+.public-demo-detail { color: #b9b8d3; }

@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build -- --mode hosted",
   "rewrites": [
     {
       "source": "/api/:path*",
