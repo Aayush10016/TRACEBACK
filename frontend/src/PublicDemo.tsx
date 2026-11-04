@@ -17,7 +17,12 @@ const steps = [
 ];
 
 export default function PublicDemo() {
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState(() => {
+    const view = new URLSearchParams(window.location.hash.slice(1)).get("view");
+    if (view === "investigation") return 1;
+    if (view === "verification") return 2;
+    return 0;
+  });
   return (
     <main className="public-demo">
       <header>

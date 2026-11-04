@@ -6,7 +6,7 @@ import PublicDemo from "./PublicDemo";
 import "./styles.css";
 import "./refinement.css";
 const showPublicDemo = import.meta.env.MODE === "hosted" &&
-  !new URLSearchParams(window.location.search).has("workspace") && !window.location.hash;
+  !new URLSearchParams(window.location.search).has("workspace");
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     {showPublicDemo ? <PublicDemo /> : <DemoGate><App /></DemoGate>}
