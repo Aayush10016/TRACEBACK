@@ -18,6 +18,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Order(10)
 public class DemoAccessFilter extends OncePerRequestFilter {
   private final boolean enabled;
+  @Value("${DEMO_PUBLIC_ORIGIN:}")
+  private String publicOrigin = "";
   private final byte[] expected;
 
   public DemoAccessFilter(
@@ -58,7 +60,7 @@ public class DemoAccessFilter extends OncePerRequestFilter {
       String origin = req.getHeader("Origin");
       String port = req.getServerPort() == 80 || req.getServerPort() == 443 ? "" : ":" + req.getServerPort();
       String expectedOrigin = req.getScheme() + "://" + req.getServerName() + port;
-      if ("cross-site".equals(req.getHeader("Sec-Fetch-Site")) || (origin != null && !origin.equalsIgnoreCase(expectedOrigin))) {
+      if ("cross-site".equals(req.getHeader("Sec-Fetch-Site")) || (origin != null && !origin.equalsIgnoreCase(expectedOrigin) && !origin.equals(publicOrigin))) {
         res.setStatus(403);
         res.setContentType("application/json");
         res.getWriter().write("{\"message\":\"Cross-origin changes are not allowed.\"}");

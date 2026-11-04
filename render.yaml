@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: traceback-lab
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production,render
+      - key: JAVA_TOOL_OPTIONS
+        value: -Xmx256m -XX:MaxMetaspaceSize=128m
+      - key: DB_HOST
+        fromDatabase:
+          name: traceback-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: traceback-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: traceback-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: traceback-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: traceback-db
+          property: password
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: DEMO_USERNAME
+        sync: false
+      - key: DEMO_PASSWORD
+        sync: false
+      - key: DEMO_PUBLIC_ORIGIN
+        sync: false
+      - key: PROJECT_WORKER_URL
+        sync: false
+      - key: WORKER_USERNAME
+        sync: false
+      - key: WORKER_PASSWORD
+        sync: false
+databases:
+  - name: traceback-db
+    plan: free
+    ipAllowList: []

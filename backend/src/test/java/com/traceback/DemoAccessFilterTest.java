@@ -31,6 +31,17 @@ class DemoAccessFilterTest {
     assertThat(request("POST", "/api/simulations/run", auth(), "https://other.example").getStatus()).isEqualTo(403);
     assertThat(request("POST", "/api/simulations/run", auth(), "http://localhost").getStatus()).isEqualTo(204);
   }
+  @Test void allowsOnlyConfiguredFrontendOrigin() throws Exception {
+    var filter=new DemoAccessFilter(true,"judge",PASSWORD);
+    org.springframework.test.util.ReflectionTestUtils.setField(filter,"publicOrigin","https://demo.vercel.app");
+    var req=new MockHttpServletRequest("POST","/api/projects");
+    req.addHeader("Authorization",auth());req.addHeader("Origin","https://demo.vercel.app");
+    var res=new MockHttpServletResponse();filter.doFilter(req,res,(a,b)->((jakarta.servlet.http.HttpServletResponse)b).setStatus(204));
+    assertThat(res.getStatus()).isEqualTo(204);
+    req=new MockHttpServletRequest("POST","/api/projects");req.addHeader("Authorization",auth());req.addHeader("Origin","https://evil.example");
+    res=new MockHttpServletResponse();filter.doFilter(req,res,(a,b)->{});
+    assertThat(res.getStatus()).isEqualTo(403);
+  }
   @Test void healthProbeIsPublicAndHeadersAreSafe() throws Exception {
     var response = request("GET", "/actuator/health", null, null);
     assertThat(response.getStatus()).isEqualTo(204);

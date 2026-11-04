@@ -1,3 +1,4 @@
+import { apiFetch } from "./transport";
 import { useEffect, useState } from "react";
 import {
   Upload,
@@ -100,7 +101,7 @@ export default function ProjectWorkspace() {
     try {
       const body = new FormData();
       body.append("file", file);
-      const response = await fetch("/api/projects", {
+      const response = await apiFetch("/api/projects", {
         method: "POST",
         body,
         signal: AbortSignal.timeout(45000),

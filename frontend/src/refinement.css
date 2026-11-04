@@ -1648,3 +1648,10 @@ pre.project-output {
   min-width: 0;
   overflow-wrap: anywhere;
 }
+
+.demo-gate{min-height:100dvh;display:grid;place-items:center;padding:24px}
+.demo-signin{width:min(100%,400px);display:grid;gap:16px;padding:32px;border:1px solid #30343b;border-radius:16px;background:#15181d}
+.demo-signin h1,.demo-signin p{margin:0}
+.demo-signin input{width:100%;min-width:0;padding:12px;color:#eee;background:#0d1015;border:1px solid #414650;border-radius:8px}
+.demo-signin label{margin-top:8px}
+.demo-signin small{color:#a7adb7;line-height:1.5}

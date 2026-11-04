@@ -1,3 +1,4 @@
+import { apiFetch } from "./transport";
 export type Scenario =
   | "NORMAL_ORDER"
   | "DUPLICATE_ORDER"
@@ -125,7 +126,7 @@ export async function request<T>(
   method = "GET",
   body?: unknown,
 ): Promise<T | null> {
-  const response = await fetch("/api" + path, {
+  const response = await apiFetch("/api" + path, {
     method,
     headers: body ? { "Content-Type": "application/json" } : undefined,
     body: body ? JSON.stringify(body) : undefined,
